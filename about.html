@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Estimación estadística</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">📊 Análisis de caso 2</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-chart-bar"></span>
+     
+    Estadística Descriptiva
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-calculator"></span>
+     
+    Estadística Inferencial
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="#">Autores: Carolina Gonzalez Becerra, Nicole García Bernal</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Estimación estadística</h1>
+
+</div>
+
+
+<style type="text/css">
+.column {display:flex;}
+h1{color:rgb(26, 72, 112)}
+h2{color:rgb(26, 72, 112)}
+h3{color:rgb(26, 72, 112)}
+</style>
+<div id="muestreo-y-prueba-de-hipótesis" class="section level1">
+<h1>Muestreo y prueba de hipótesis</h1>
+</div>
+<div id="muestra-aleatoria-simple-de-50-cereales"
+class="section level1">
+<h1>4. Muestra aleatoria simple de 50 cereales</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># 1. Definición de la semilla para asegurar la reproducibilidad del muestreo</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># 2. Se asigna un ID único a cada cereal para facilitar su identificación posterior</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>cereal1<span class="sc">$</span>ID_Original <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(cereal1)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co"># 3. Definición del tamaño de la muestra</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>n_1 <span class="ot">&lt;-</span> <span class="dv">50</span>  </span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co"># 4. Selección de la muestra aleatoria simple SIN reemplazo</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>muestreo_aleatorio <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(cereal1), <span class="at">size =</span> n_1, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># 5. Creación del subconjunto de datos con los cereales seleccionados</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>muestra_aleatoria <span class="ot">&lt;-</span> cereal1[muestreo_aleatorio, ]</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co"># 6. Tabla que presenta los datos de la muestra seleccionada</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="fu">datatable</span>(</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  muestra_aleatoria[, <span class="fu">c</span>(<span class="st">&quot;ID_Original&quot;</span>, <span class="fu">names</span>(cereal1)[<span class="fu">names</span>(cereal1) <span class="sc">!=</span> <span class="st">&quot;ID_Original&quot;</span>])], </span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>    <span class="at">pageLength =</span> <span class="dv">10</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    <span class="at">autoWidth =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="at">searching =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    <span class="at">scrollX =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    <span class="at">lengthMenu =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="sc">-</span><span class="dv">1</span>), <span class="fu">c</span>(<span class="st">&quot;10&quot;</span>, <span class="st">&quot;20&quot;</span>, <span class="st">&quot;50&quot;</span>, <span class="st">&quot;Todos&quot;</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>  ),</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Muestra Aleatoria de Cereales&quot;</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>  <span class="at">rownames =</span> <span class="cn">FALSE</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>)</span></code></pre></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-2514ce28ae593bde0f73" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2514ce28ae593bde0f73">{"x":{"filter":"none","vertical":false,"caption":"<caption>Muestra Aleatoria de Cereales<\/caption>","data":[[31,51,14,67,42,50,43,75,25,57,9,26,7,73,74,62,19,36,70,17,71,39,53,12,15,32,64,45,65,63,41,10,23,27,49,44,52,38,69,34,29,5,8,54,13,18,1,56,76,30],["Golden Crisp","Nutri-grain Wheat","Clusters","Smacks","Life","Nutri-Grain Almond-Raisin","Lucky Charms","Wheat Chex","Froot Loops","Quaker Oat Squares","Bran Chex","Frosted Flakes","Apple Jacks","Triples","Trix","Rice Chex","Count Chocula","Honey Graham Ohs","Total Corn Flakes","Corn Flakes","Total Raisin Bran","Just Right Crunchy  Nuggets","Post Nat. Raisin Bran","Cheerios","Cocoa Puffs","Golden Grahams","Shredded Wheat","Muesli Raisins; Dates; &amp; Almonds","Shredded Wheat 'n'Bran","Rice Krispies","Kix","Bran Flakes","Crispy Wheat &amp; Raisins","Frosted Mini-Wheats","Nut&amp;Honey Crunch","Maypo","Oatmeal Raisin Crisp","Honey-comb","Strawberry Fruit Wheats","Grape-Nuts","Fruitful Bran","Almond Delight","Basic 4","Product 19","Cinnamon Toast Crunch","Corn Pops","100% Bran","Puffed Wheat","Wheaties","Fruity Pebbles"],["P","K","G","K","Q","K","G","R","K","Q","R","K","K","G","G","R","G","Q","G","K","G","K","P","G","G","G","N","R","N","K","G","P","G","K","K","A","G","P","N","P","K","R","G","K","G","K","N","Q","G","P"],[100,90,110,110,100,140,110,100,110,100,90,110,110,110,110,110,110,120,110,100,140,110,120,110,110,110,80,150,90,110,110,90,100,100,120,100,130,110,90,110,120,110,130,100,120,110,70,50,100,110],[2,3,3,2,4,3,2,3,2,4,2,1,2,2,1,1,1,1,2,2,3,2,3,6,1,1,2,4,3,2,2,3,2,3,2,4,3,1,2,3,3,2,3,3,1,1,4,2,3,1],[45,170,140,70,150,220,180,230,125,135,200,200,125,250,140,240,180,220,200,290,190,170,200,290,180,280,0,95,0,290,260,210,140,0,190,0,170,180,15,170,240,200,210,320,210,90,130,0,200,135],[15,2,7,15,6,7,12,3,13,6,6,11,14,3,12,2,13,11,3,2,14,6,14,1,13,9,0,11,0,3,3,5,10,7,9,3,10,11,5,3,12,8,8,3,9,12,6,0,3,12],[40,90,105,40,95,130,55,115,30,110,125,25,30,60,25,30,65,45,35,35,230,60,260,105,55,45,95,170,140,35,40,190,120,100,40,95,120,35,90,90,190,-1,100,45,45,20,280,50,110,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>ID_Original<\/th>\n      <th>name<\/th>\n      <th>mfr<\/th>\n      <th>calories<\/th>\n      <th>protein<\/th>\n      <th>sodium<\/th>\n      <th>sugars<\/th>\n      <th>potass<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"autoWidth":true,"searching":true,"scrollX":true,"lengthMenu":[[10,20,50,-1],["10","20","50","Todos"]],"columnDefs":[{"className":"dt-right","targets":[0,3,4,5,6,7]},{"name":"ID_Original","targets":0},{"name":"name","targets":1},{"name":"mfr","targets":2},{"name":"calories","targets":3},{"name":"protein","targets":4},{"name":"sodium","targets":5},{"name":"sugars","targets":6},{"name":"potass","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div
+id="un-artículo-indica-que-el-conjunto-de-cereales-de-la-tabla-estan-dentro-de-los-más-saludables-del-mercado.-indica-que-en-promedio-tiene-menos-de-140mg-de-sodio.-utilizando-la-información-de-la-muestra-generada-en-el-ítem-4-pruebe-esta-afirmación-a-un-nivel-de-significacia-de-005."
+class="section level1">
+<h1>5. Un artículo indica que el conjunto de cereales de la tabla estan
+dentro de los más saludables del mercado. Indica que en promedio tiene
+menos de 140mg de sodio. Utilizando la información de la muestra
+generada en el ítem 4 pruebe esta afirmación a un nivel de significacia
+de 0,05.</h1>
+<p>Antes de realizar la prueba de hipótesis, es importante señalar que
+se cuenta con la base de datos completa, la cual representa a la
+población en su totalidad, lo cual permite calcular directamente
+parámetros poblacionales como la desviación estándar del contenido de
+sodio, que será utilizada para aplicar la prueba mediante una
+distribución normal (Z), considerando que la muestra aleatoria
+seleccionada tiene un tamaño de 50, lo cual se considera suficientemente
+grande. Este enfoque es válido, ya que no es necesario estimar la
+variabilidad a partir de una muestra cuando se conoce la variabilidad
+real de toda la población. Asimismo, se calculará la media muestral del
+sodio, ya que este valor es esencial para determinar el estadístico Z,
+el cual nos permitirá contrastar la hipótesis planteada.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># 1. Media muestral</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>media_muestral <span class="ot">&lt;-</span> <span class="fu">mean</span>(muestra_aleatoria<span class="sc">$</span>sodium, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 2. Desviación estándar poblacional</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>desviacion_poblacional <span class="ot">&lt;-</span> <span class="fu">sd</span>(cereal1<span class="sc">$</span>sodium, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 3. Impresión de resultados</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Media muestral (x̄):&quot;</span>, <span class="fu">round</span>(media_muestral, <span class="dv">2</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Media muestral (x̄): 165.5</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Desviación estándar poblacional (σ):&quot;</span>, <span class="fu">round</span>(desviacion_poblacional, <span class="dv">2</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Desviación estándar poblacional (σ): 83.83</code></pre>
+<div id="datos" class="section level2">
+<h2>Datos</h2>
+<p>Ahora bien, teniendo en cuenta las anteriores medidas, procederemos a
+agrupar todos los datos necesarios para el desarrollo de la prueba de
+hipótesis, con el fin de facilitar el procedimiento:</p>
+<ul>
+<li><span class="math inline">\(\bar{x} = 165{,}50\)</span></li>
+<li><span class="math inline">\(n = 50\)</span></li>
+<li><span class="math inline">\(\mu_0 = 140\)</span></li>
+<li><span class="math inline">\(\sigma = 83{,}83\)</span></li>
+</ul>
+</div>
+<div id="paso-1-formulación-de-h_0-y-h_1" class="section level2">
+<h2>Paso 1: Formulación de <span class="math inline">\(H_0\)</span> y
+<span class="math inline">\(H_1\)</span></h2>
+<p><span class="math display">\[
+H_0: \mu \geq 140\ \text{mg} \\
+H_1: \mu &lt; 140\ \text{mg}
+\]</span> La formulación de las hipótesis responde al objetivo del
+estudio, que consiste en evaluar si el contenido promedio de sodio en
+los cereales es menor a 140 mg. Por esta razón, la hipótesis alternativa
+(<span class="math inline">\(H_1\)</span>) se plantea como <span
+class="math inline">\(\mu &lt; 140\ \text{mg}\)</span>, ya que es lo que
+se desea probar. Por tanto, la hipótesis nula (<span
+class="math inline">\(H_0\)</span>) se establece como el complemento
+lógico de <span class="math inline">\(H_1\)</span>, es decir, <span
+class="math inline">\(\mu \geq 140\ \text{mg}\)</span>. Esta formulación
+permite aplicar correctamente la prueba unilateral con cola hacia la
+izquierda.</p>
+</div>
+<div id="paso-2-definición-de-nivel-de-significancia"
+class="section level2">
+<h2>Paso 2: Definición de nivel de significancia</h2>
+<p><span class="math display">\[
+\alpha = 0{,}05
+\]</span> El nivel de significancia utilizado en esta prueba es <span
+class="math inline">\(\alpha = 0{,}05\)</span>, valor que fue
+establecido en el enunciado del ejercicio. Este nivel de significancia
+representa la probabilidad máxima de cometer un error tipo I, es decir,
+rechazar la hipótesis nula cuando en realidad es verdadera.</p>
+</div>
+<div id="paso-3-cálculo-de-estadístico-de-prueba"
+class="section level2">
+<h2>Paso 3: Cálculo de estadístico de prueba</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>mu_0 <span class="ot">&lt;-</span> <span class="dv">140</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># 1. Estadístico de prueba Z</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>z_prueba <span class="ot">&lt;-</span> (media_muestral <span class="sc">-</span> mu_0) <span class="sc">/</span> (desviacion_poblacional <span class="sc">/</span> <span class="fu">sqrt</span>(n_1))</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># 2. Impresión de resultado </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estadístico de prueba Z =&quot;</span>, <span class="fu">round</span>(z_prueba, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Estadístico de prueba Z = 2.1509</code></pre>
+<p><span class="math display">\[
+Z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}} = \frac{165{,}50 -
+140}{83{,}83 / \sqrt{50}} = 2{,}1509
+\]</span></p>
+<p>El valor calculado del estadístico de prueba es <span
+class="math inline">\(Z = 2{,}1509\)</span>. Este resultado será
+utilizado para aplicar dos métodos de decisión: el de la región crítica
+y el del valor p. En el primer caso, se comparará con el valor crítico
+correspondiente al nivel de significancia establecido. En el segundo, se
+calculará la probabilidad asociada a este valor de <span
+class="math inline">\(Z\)</span> y se comparará con <span
+class="math inline">\(\alpha = 0{,}05\)</span>. Ambos enfoques
+permitirán determinar si existe evidencia suficiente para rechazar la
+hipótesis nula en favor de la alternativa.</p>
+</div>
+<div id="paso-4-formulación-de-regla-de-decisión"
+class="section level2">
+<h2>Paso 4: Formulación de regla de decisión</h2>
+<div id="metódo-1---región-crítica" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>Para aplicar el método de la región crítica, es necesario determinar
+el valor crítico correspondiente al nivel de significancia establecido.
+Dado que se trata de una prueba unilateral de cola izquierda, el valor
+crítico <span class="math inline">\(z_\alpha\)</span> se obtiene a
+partir de la distribución normal estándar y representa el punto de corte
+en la cola izquierda con una probabilidad acumulada igual a <span
+class="math inline">\(\alpha = 0{,}05\)</span>. Cualquier valor del
+estadístico de prueba menor a <span
+class="math inline">\(z_\alpha\)</span> se ubicará dentro de la región
+crítica, lo cual implicaría el rechazo de la hipótesis nula.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># 1. Nivel de significancia</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># 2. Cálculo del valor crítico z para una cola izquierda</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>z_critico <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(alpha)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># 3. Mostrar el resultado</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico (z[0.05]) =&quot;</span>, <span class="fu">round</span>(z_critico, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor crítico (z[0.05]) = -1.6449</code></pre>
+<p><img src="about_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="metódo-2---valor_p" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p>Para complementar el análisis, se aplica el método del valor p, el
+cual permite contrastar la hipótesis nula evaluando la probabilidad de
+obtener un valor del estadístico de prueba tan extremo como el
+observado, bajo el supuesto de que <span
+class="math inline">\(H_0\)</span> es verdadera. Dado que se trata de
+una prueba unilateral de cola izquierda, el valor p se calcula como la
+probabilidad de que una variable aleatoria normal estándar tome un valor
+menor al estadístico de prueba obtenido:</p>
+<p><span class="math display">\[
+P(Z &lt; 2{,}1509)
+\]</span></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># 1. Cálculo del valor p (prueba unilateral izquierda)</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>valor_p <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(z_prueba)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># 2. Mostrar resultado</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor p =&quot;</span>, <span class="fu">round</span>(valor_p, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor p = 0.9843</code></pre>
+</div>
+</div>
+<div id="paso-5-toma-de-decisión-con-respecto-a-las-hipótesis"
+class="section level2">
+<h2>Paso 5: Toma de decisión con respecto a las hipótesis</h2>
+<div id="metódo-1---región-crítica-1" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>Según el método de la región crítica, se compara el valor del
+estadístico de prueba con el valor crítico correspondiente al nivel de
+significancia <span class="math inline">\(\alpha = 0{,}05\)</span>. Dado
+que el valor calculado del estadístico de prueba <span
+class="math inline">\(Z = 2{,}1509\)</span> se encuentra a la derecha
+del valor crítico <span class="math inline">\(z_\alpha =
+-1{,}6449\)</span>, no cae dentro de la región crítica (ubicada en la
+cola izquierda de la distribución), por lo tanto, <strong>no se rechaza
+la hipótesis nula</strong>.</p>
+</div>
+<div id="metódo-2---valor_p-1" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p><span class="math display">\[
+p = 0{,}9843 &gt; \alpha = 0{,}05
+\]</span></p>
+<p>El valor obtenido fue <span class="math inline">\(p =
+0{,}9844\)</span>, el cual es <strong>mayor</strong> que el nivel de
+significancia <span class="math inline">\(\alpha = 0{,}05\)</span>, por
+tanto, <strong>no se rechaza la hipótesis nula</strong>.</p>
+</div>
+</div>
+<div id="paso-6-conclusión" class="section level2">
+<h2>Paso 6: Conclusión</h2>
+<p>Tanto el método de la región crítica como el del valor p conducen a
+la <strong>misma conclusión</strong>:<strong>no se rechaza la hipótesis
+nula</strong> al nivel de significancia del 5%. El valor del estadístico
+<span class="math inline">\(Z = 2{,}1509\)</span> no cae en la región
+crítica definida por <span class="math inline">\(z_\alpha =
+-1{,}6449\)</span>, y el valor p calculado (<span
+class="math inline">\(p = 0{,}9844\)</span>) es mayor que <span
+class="math inline">\(\alpha = 0{,}05\)</span>. Por lo tanto, <strong>no
+se cuenta con evidencia estadísticamente significativa para afirmar que
+el contenido promedio de sodio en los cereales sea menor a 140
+mg</strong>. Este resultado es consistente con el valor poblacional
+real, ya que al tomar en cuenta toda la base de datos, se observa que la
+media poblacional del sodio es de <span
+class="math inline">\(159{,}68\)</span> mg, un valor claramente por
+encima del valor propuesto.</p>
+</div>
+</div>
+<div
+id="una-investigación-del-mercado-de-cereales-indica-que-más-de-la-tercera-parte-son-manufacturados-por-kelloggs.-utilizando-la-información-de-la-muestra-generada-en-el-ítem-4-pruebe-esta-afirmación-a-un-nivel-de-significacia-de-005."
+class="section level1">
+<h1>6. Una investigación del mercado de cereales, indica que más de la
+tercera parte son manufacturados por Kelloggs. Utilizando la información
+de la muestra generada en el ítem 4 pruebe esta afirmación a un nivel de
+significacia de 0,05.</h1>
+<p>Antes de realizar la prueba de hipótesis, es necesario calcular el
+estadístico muestral de proporción, ya que este valor será utilizado
+para contrastar la afirmación planteada. Dicho cálculo se realizará a
+partir de la muestra aleatoria simple de tamaño 50, seleccionada
+previamente en el ítem 4, en particular, se identificará cuántos
+cereales de la muestra pertenecen al fabricante Kellogg’s, y con ello se
+determinará la proporción muestral de dicho fabricante.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># 1. Contar cuántos cereales de la muestra aleatoria son de Kellogg&#39;s</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>kelloggs_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(muestra_aleatoria<span class="sc">$</span>mfr <span class="sc">==</span> <span class="st">&quot;K&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># 2. Proporción muestral</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>p_gorro <span class="ot">&lt;-</span> kelloggs_count <span class="sc">/</span> <span class="fu">nrow</span>(muestra_aleatoria)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># 3. Impresión de resultados</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cereales de Kellogg&#39;s en la muestra:&quot;</span>, kelloggs_count, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Cereales de Kellogg&#39;s en la muestra: 14</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Proporción muestral (p̂):&quot;</span>, <span class="fu">round</span>(p_gorro, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Proporción muestral (p̂): 0.28</code></pre>
+<div id="datos-1" class="section level2">
+<h2>Datos</h2>
+<ul>
+<li><span class="math inline">\(\hat{p} = 0{,}28\)</span></li>
+<li><span class="math inline">\(n = 50\)</span></li>
+<li><span class="math inline">\(p_0 = \dfrac{1}{3} \approx
+0{,}3333\)</span></li>
+</ul>
+</div>
+<div id="paso-1-formulación-de-h_0-y-h_1-1" class="section level2">
+<h2>Paso 1: Formulación de <span class="math inline">\(H_0\)</span> y
+<span class="math inline">\(H_1\)</span></h2>
+<p><span class="math display">\[
+H_0: p \leq \dfrac{1}{3} \\
+H_1: p &gt; \dfrac{1}{3}
+\]</span></p>
+<p>La formulación de las hipótesis responde al objetivo del análisis,
+que consiste en evaluar si <strong>más de la tercera parte de los
+cereales del mercado son fabricados por Kellogg’s</strong>. Por esta
+razón, la hipótesis alternativa (<span
+class="math inline">\(H_1\)</span>) se plantea como <span
+class="math inline">\(p &gt; \dfrac{1}{3}\)</span>, ya que es la
+afirmación que se desea validar. Dado que la hipótesis alternativa
+define la dirección del contraste, esta situación corresponde a una
+prueba unilateral de cola derecha. Por otro lado, la hipótesis nula**
+(<span class="math inline">\(H_0\)</span>) representa el **complemento
+lógico de <span class="math inline">\(H_1\)</span>, por lo que se
+formula como <span class="math inline">\(p \leq
+\dfrac{1}{3}\)</span>.</p>
+</div>
+<div id="paso-2-definición-de-nivel-de-significancia-1"
+class="section level2">
+<h2>Paso 2: Definición de nivel de significancia</h2>
+<p><span class="math display">\[
+\alpha = 0{,}05
+\]</span> El nivel de significancia utilizado en esta prueba es <span
+class="math inline">\(\alpha = 0{,}05\)</span>, valor que fue
+establecido en el enunciado del ejercicio y el cual esta asociado a la
+probabilidad máxima de cometer un error tipo I.</p>
+</div>
+<div id="paso-3-cálculo-de-estadístico-de-prueba-1"
+class="section level2">
+<h2>Paso 3: Cálculo de estadístico de prueba</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co"># 1. Estadístico Z</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>z_p <span class="ot">&lt;-</span> (p_gorro <span class="sc">-</span> p0) <span class="sc">/</span> <span class="fu">sqrt</span>(p0 <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p0) <span class="sc">/</span> n_1)</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co"># 2. Impresión de resultado </span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estadístico de prueba Z =&quot;</span>, <span class="fu">round</span>(z_p, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Estadístico de prueba Z = -0.8</code></pre>
+<p><span class="math display">\[
+Z = \frac{\hat{p} - p_0}{\sqrt{\dfrac{p_0(1 - p_0)}{n}}} =
+\frac{0{,}28 - \dfrac{1}{3}}{\sqrt{\dfrac{\dfrac{1}{3}(1 -
+\dfrac{1}{3})}{50}}} = -0{,}8
+\]</span> El valor calculado del estadístico de prueba es <span
+class="math inline">\(Z = -0{,}8\)</span>. Este resultado será comparado
+con el valor crítico correspondiente y también se utilizará para
+calcular el valor p, con el fin de tomar una decisión sobre la hipótesis
+planteada.</p>
+</div>
+<div id="paso-4-formulación-de-regla-de-decisión-1"
+class="section level2">
+<h2>Paso 4: Formulación de regla de decisión</h2>
+<div id="metódo-1---región-crítica-2" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>Para aplicar el método de la región crítica, es necesario determinar
+el valor crítico correspondiente al nivel de significancia establecido.
+Dado que se trata de una prueba unilateral de cola derecha, el valor
+crítico <span class="math inline">\(z_\alpha\)</span> se obtiene a
+partir de la distribución normal estándar y delimita la región crítica
+ubicada en la cola derecha, cuya probabilidad es igual a <span
+class="math inline">\(\alpha = 0{,}05\)</span>.<br />
+Cualquier valor del estadístico de prueba mayor a <span
+class="math inline">\(z_\alpha\)</span> se ubicará dentro de esta
+región, lo cual implicaría el rechazo de la hipótesis nula.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># 1. Nivel de significancia</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>alpha_2 <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="co"># 2. Cálculo del valor crítico z para una cola izquierda</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>z_critico_2 <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha_2)</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co"># 3. Mostrar el resultado</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico (z[0.05]) =&quot;</span>, <span class="fu">round</span>(z_critico_2, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor crítico (z[0.05]) = 1.6449</code></pre>
+<p><img src="about_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="metódo-2---valor_p-2" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p>Dado que se trata de una <strong>prueba unilateral de cola
+derecha</strong>, el valor p se calcula como la probabilidad de que una
+variable aleatoria normal estándar tome un valor <strong>mayor</strong>
+al estadístico de prueba obtenido:</p>
+<p><span class="math display">\[
+P(Z &gt; -0{,}8)
+\]</span></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># 1. Cálculo del valor p (prueba unilateral derecha)</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>valor_p2 <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(z_p, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co"># 2. Mostrar resultado</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor p =&quot;</span>, <span class="fu">round</span>(valor_p2, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor p = 0.7881</code></pre>
+</div>
+</div>
+<div id="paso-5-toma-de-decisión-con-respecto-a-las-hipótesis-1"
+class="section level2">
+<h2>Paso 5: Toma de decisión con respecto a las hipótesis</h2>
+<div id="metódo-1---región-crítica-3" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>El valor calculado del estadístico de prueba fue <span
+class="math inline">\(Z = -0{,}8\)</span>, el cual se encuentra a la
+izquierda del valor crítico <span class="math inline">\(z_\alpha =
+1{,}6449\)</span>, dado que se trata de una prueba unilateral de cola
+derecha, solo se rechaza la hipótesis nula cuando el estadístico se
+ubica en la región crítica, es decir, a la derecha de <span
+class="math inline">\(z_\alpha\)</span>, en este caso, como <span
+class="math inline">\(Z = -0{,}8\)</span> <strong>no cae dentro de la
+región crítica</strong>, se concluye que <strong>no se rechaza la
+hipótesis nula</strong>.</p>
+</div>
+<div id="metódo-2---valor_p-3" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p><span class="math display">\[
+p = 0{,}7881&gt; \alpha = 0{,}05
+\]</span> Dado que el valor p resulta ser <strong>mayor</strong> que el
+nivel de significancia establecido, no se cuenta con suficiente
+evidencia estadística para rechazar la hipótesis nula.</p>
+</div>
+</div>
+<div id="paso-6-conclusión-1" class="section level2">
+<h2>Paso 6: Conclusión</h2>
+<p>Tanto el método de la región crítica como el del valor p conducen a
+la misma decisión estadística: <strong>no se rechaza la hipótesis
+nula</strong> al nivel de significancia del 5%. El valor del estadístico
+de prueba fue <span class="math inline">\(Z = -0{,}8\)</span>, el cual
+no se encuentra dentro de la región crítica delimitada por <span
+class="math inline">\(z_\alpha = 1{,}6449\)</span>. Además, el valor p
+obtenido fue <span class="math inline">\(p = 0{,}7881\)</span>,
+claramente mayor que <span class="math inline">\(\alpha =
+0{,}05\)</span>, lo que respalda la misma conclusión. Por tanto,
+<strong>no se cuenta con evidencia estadísticamente
+significativa</strong> para afirmar que <strong>más de la tercera parte
+de los cereales del mercado son fabricados por Kellogg’s</strong>. Este
+resultado es interesante si se considera que, al calcular la proporción
+poblacional a partir de toda la base de datos, Kellogg’s representa
+aproximadamente el <span class="math inline">\(30\%\)</span> del total
+de cereales producidos, una cifra cercana pero insuficiente para
+respaldar estadísticamente la afirmación inicial.</p>
+</div>
+</div>
+<div id="muestra-de-tamaño-40" class="section level1">
+<h1>7. Muestra de tamaño 40</h1>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># 1. Definición de la semilla para asegurar la reproducibilidad del muestreo</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="co"># 2. Se asigna un ID único a cada cereal para facilitar su identificación posterior</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>cereal1<span class="sc">$</span>ID_Original <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(cereal1)</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="co"># 3. Definición del tamaño de la muestra</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>n_2 <span class="ot">&lt;-</span> <span class="dv">40</span>  </span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co"># 4. Selección de la muestra aleatoria simple SIN reemplazo</span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a>muestreo_aleatorio2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(cereal1), <span class="at">size =</span> n_2, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co"># 5. Creación del subconjunto de datos con los cereales seleccionados</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>muestra_aleatoria2 <span class="ot">&lt;-</span> cereal1[muestreo_aleatorio2, ]</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="co"># 6. Tabla que presenta los datos de la muestra seleccionada</span></span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="fu">datatable</span>(</span>
+<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a>  muestra_aleatoria2[, <span class="fu">c</span>(<span class="st">&quot;ID_Original&quot;</span>, <span class="fu">names</span>(cereal1)[<span class="fu">names</span>(cereal1) <span class="sc">!=</span> <span class="st">&quot;ID_Original&quot;</span>])], </span>
+<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a>    <span class="at">pageLength =</span> <span class="dv">10</span>,</span>
+<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a>    <span class="at">autoWidth =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>    <span class="at">searching =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a>    <span class="at">scrollX =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a>    <span class="at">lengthMenu =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="sc">-</span><span class="dv">1</span>), <span class="fu">c</span>(<span class="st">&quot;10&quot;</span>, <span class="st">&quot;20&quot;</span>, <span class="st">&quot;50&quot;</span>, <span class="st">&quot;Todos&quot;</span>))</span>
+<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a>  ),</span>
+<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Muestra Aleatoria de Cereales&quot;</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>  <span class="at">rownames =</span> <span class="cn">FALSE</span></span>
+<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a>)</span></code></pre></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5d05eac75555269eefd0" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5d05eac75555269eefd0">{"x":{"filter":"none","vertical":false,"caption":"<caption>Muestra Aleatoria de Cereales<\/caption>","data":[[31,51,14,67,42,50,43,75,25,57,9,26,7,73,74,62,19,36,70,17,71,39,53,12,15,32,64,45,65,63,41,10,23,27,49,44,52,38,69,34],["Golden Crisp","Nutri-grain Wheat","Clusters","Smacks","Life","Nutri-Grain Almond-Raisin","Lucky Charms","Wheat Chex","Froot Loops","Quaker Oat Squares","Bran Chex","Frosted Flakes","Apple Jacks","Triples","Trix","Rice Chex","Count Chocula","Honey Graham Ohs","Total Corn Flakes","Corn Flakes","Total Raisin Bran","Just Right Crunchy  Nuggets","Post Nat. Raisin Bran","Cheerios","Cocoa Puffs","Golden Grahams","Shredded Wheat","Muesli Raisins; Dates; &amp; Almonds","Shredded Wheat 'n'Bran","Rice Krispies","Kix","Bran Flakes","Crispy Wheat &amp; Raisins","Frosted Mini-Wheats","Nut&amp;Honey Crunch","Maypo","Oatmeal Raisin Crisp","Honey-comb","Strawberry Fruit Wheats","Grape-Nuts"],["P","K","G","K","Q","K","G","R","K","Q","R","K","K","G","G","R","G","Q","G","K","G","K","P","G","G","G","N","R","N","K","G","P","G","K","K","A","G","P","N","P"],[100,90,110,110,100,140,110,100,110,100,90,110,110,110,110,110,110,120,110,100,140,110,120,110,110,110,80,150,90,110,110,90,100,100,120,100,130,110,90,110],[2,3,3,2,4,3,2,3,2,4,2,1,2,2,1,1,1,1,2,2,3,2,3,6,1,1,2,4,3,2,2,3,2,3,2,4,3,1,2,3],[45,170,140,70,150,220,180,230,125,135,200,200,125,250,140,240,180,220,200,290,190,170,200,290,180,280,0,95,0,290,260,210,140,0,190,0,170,180,15,170],[15,2,7,15,6,7,12,3,13,6,6,11,14,3,12,2,13,11,3,2,14,6,14,1,13,9,0,11,0,3,3,5,10,7,9,3,10,11,5,3],[40,90,105,40,95,130,55,115,30,110,125,25,30,60,25,30,65,45,35,35,230,60,260,105,55,45,95,170,140,35,40,190,120,100,40,95,120,35,90,90]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>ID_Original<\/th>\n      <th>name<\/th>\n      <th>mfr<\/th>\n      <th>calories<\/th>\n      <th>protein<\/th>\n      <th>sodium<\/th>\n      <th>sugars<\/th>\n      <th>potass<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"autoWidth":true,"searching":true,"scrollX":true,"lengthMenu":[[10,20,50,-1],["10","20","50","Todos"]],"columnDefs":[{"className":"dt-right","targets":[0,3,4,5,6,7]},{"name":"ID_Original","targets":0},{"name":"name","targets":1},{"name":"mfr","targets":2},{"name":"calories","targets":3},{"name":"protein","targets":4},{"name":"sodium","targets":5},{"name":"sugars","targets":6},{"name":"potass","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div
+id="suponga-que-la-muestra-generada-en-el-ítem-4-y-en-el-ítem-anterior-son-independientes.-utilizando-estas-dos-muestras-desarrolle-un-prueba-para-determinar-si-las-varianzas-del-sodio-son-iguales-o-diferentes.utilice-un-nivel-de-significancia-del-005."
+class="section level1">
+<h1>8. Suponga que la muestra generada en el ítem 4 y en el ítem
+anterior son independientes. Utilizando estas dos muestras, desarrolle
+un prueba para determinar si las varianzas del sodio son iguales o
+diferentes.Utilice un nivel de significancia del 0,05.</h1>
+<p>Para determinar si las varianzas del contenido de sodio son iguales o
+diferentes, se utilizarán dos muestras independientes tomadas de la base
+de datos. Estas muestras no comparten observaciones entre sí, lo que
+permite aplicar una prueba F, que compara la variabilidad entre ambos
+grupos. Antes de realizar la prueba, se calcularán las varianzas
+muestrales de cada muestra:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="co"># 1. Cálculo de las varianzas muestrales del sodio</span></span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>varianza_1 <span class="ot">&lt;-</span> <span class="fu">var</span>(muestra_aleatoria<span class="sc">$</span>sodium)</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>varianza_2 <span class="ot">&lt;-</span> <span class="fu">var</span>(muestra_aleatoria2<span class="sc">$</span>sodium)</span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="co"># 2. Imprimir resultados</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Varianza muestral grupo 1:&quot;</span>, <span class="fu">round</span>(varianza_1, <span class="dv">2</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Varianza muestral grupo 1: 6907.4</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Varianza muestral grupo 2:&quot;</span>, <span class="fu">round</span>(varianza_2, <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## Varianza muestral grupo 2: 6852.82</code></pre>
+<div id="datos-2" class="section level2">
+<h2>Datos</h2>
+<table class="table table-striped table-hover table-condensed table-bordered lightable-classic" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto; font-family: Cambria; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Tabla de Varianzas por Grupo
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+Grupo
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+n
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+s<sup>2</sup>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 1
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+50
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6907.40
+</td>
+</tr>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 2
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+40
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6852.82
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="paso-1-formulación-de-h_0-y-h_1-2" class="section level2">
+<h2>Paso 1: Formulación de <span class="math inline">\(H_0\)</span> y
+<span class="math inline">\(H_1\)</span></h2>
+<p><span class="math display">\[
+H_0: \sigma_1^2 = \sigma_2^2 \\
+H_1: \sigma_1^2 \ne \sigma_2^2
+\]</span> Dado que el objetivo del ejercicio es determinar si las
+varianzas del contenido de sodio son iguales o diferentes, se plantea
+una prueba bilateral para comparar las varianzas. Por esta razón, la
+hipótesis nula se formula como <span class="math inline">\(H_0:
+\sigma_1^2 = \sigma_2^2\)</span>, lo cual supone que ambas muestras
+provienen de poblaciones con igual variabilidad. Por otro lado, la
+hipótesis alternativa <span class="math inline">\(H_1: \sigma_1^2 \ne
+\sigma_2^2\)</span> representa el caso contrario, es decir, que existe
+una diferencia en la dispersión del sodio entre los dos grupos.</p>
+</div>
+<div id="paso-2-definición-de-nivel-de-significancia-2"
+class="section level2">
+<h2>Paso 2: Definición de nivel de significancia</h2>
+<p><span class="math display">\[
+\alpha = 0{,}05
+\]</span> El nivel de significancia utilizado es <span
+class="math inline">\(\alpha = 0{,}05\)</span>, tal como lo indica el
+enunciado del ejercicio. Esto significa que se acepta hasta un 5% de
+probabilidad de cometer un error al rechazar la hipótesis nula si en
+realidad es verdadera.</p>
+</div>
+<div id="paso-3-cálculo-de-estadístico-de-prueba-2"
+class="section level2">
+<h2>Paso 3: Cálculo de estadístico de prueba</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># 1. Cáculo de estadístico de prueba </span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>F_prueba <span class="ot">&lt;-</span> varianza_1 <span class="sc">/</span> varianza_2</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>gl1 <span class="ot">&lt;-</span> n_1 <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>gl2 <span class="ot">&lt;-</span> n_2 <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a><span class="co"># Mostrar resultado</span></span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estadístico F =&quot;</span>, <span class="fu">round</span>(F_prueba, <span class="dv">4</span>), <span class="st">&quot; con gl1 =&quot;</span>, gl1, <span class="st">&quot;y gl2 =&quot;</span>, gl2)</span></code></pre></div>
+<pre><code>## Estadístico F = 1.008  con gl1 = 49 y gl2 = 39</code></pre>
+<p><span class="math display">\[
+F = \frac{s_1^2}{s_2^2} = \frac{6907{,}40}{6852{,}82} = 1{,}008 \quad
+\text{con } gl_1 = 49 \text{ y } gl_2 = 39
+\]</span></p>
+<p>El estadístico de prueba obtenido es <span class="math inline">\(F =
+1{,}008\)</span>, calculado con <span class="math inline">\(gl_1 =
+49\)</span> y <span class="math inline">\(gl_2 = 39\)</span>. Este valor
+representa la razón entre las varianzas muestrales, y será comparado con
+los valores críticos de la distribución F para determinar si existe una
+diferencia significativa en la variabilidad del contenido de sodio entre
+ambas muestras.</p>
+</div>
+<div id="paso-4-formulación-de-regla-de-decisión-2"
+class="section level2">
+<h2>Paso 4: Formulación de regla de decisión</h2>
+<div id="metódo-1---región-crítica-4" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>Para aplicar el método de la región crítica, es necesario calcular
+los <strong>valores críticos</strong> de la distribución F, dado que se
+trata de una <strong>prueba bilateral</strong>, el nivel de
+significancia <span class="math inline">\(\alpha = 0{,}05\)</span> se
+reparte en dos colas, asignando <span class="math inline">\(\alpha/2 =
+0{,}025\)</span> a cada extremo de la distribución, con los grados de
+libertad correspondientes a cada muestra (<span
+class="math inline">\(gl_1 = 49\)</span> y <span
+class="math inline">\(gl_2 = 39\)</span>), se determinarán los puntos de
+corte que delimitan la región de rechazo.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># Valores críticos</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>F_sup <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df1 =</span> gl1, <span class="at">df2 =</span> gl2)</span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>F_inf <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">df1 =</span> gl2, <span class="at">df2 =</span> gl1)</span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico inferior =&quot;</span>, <span class="fu">round</span>(F_inf, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Valor crítico inferior = 0.553</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico superior =&quot;</span>, <span class="fu">round</span>(F_sup, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor crítico superior = 1.8463</code></pre>
+<p><img src="about_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="metódo-2---valor_p-4" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p>Dado que se trata de una prueba bilateral, el valor p se calcula como
+la probabilidad de obtener un valor del estadístico F igual o más
+extremo que el observado, considerando tanto la cola izquierda como la
+cola derecha de la distribución.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># 1. Cálculo del valor p (prueba bilateral)</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>valor_p3 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pf</span>(F_prueba, gl1, gl2, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co"># 2. Mostrar resultado</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor p =&quot;</span>, <span class="fu">round</span>(valor_p3, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor p = 0.9884</code></pre>
+</div>
+</div>
+<div id="paso-5-toma-de-decisión-con-respecto-a-las-hipótesis-2"
+class="section level2">
+<h2>Paso 5: Toma de decisión con respecto a las hipótesis</h2>
+<div id="metódo-1---región-crítica-5" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>El valor calculado del estadístico de prueba fue <span
+class="math inline">\(F = 1{,}008\)</span>. Dado que se trata de una
+<strong>prueba bilateral</strong>, se deben considerar los valores
+críticos correspondientes al nivel de significancia <span
+class="math inline">\(\alpha = 0{,}05\)</span>. En este caso, los
+valores críticos son <span class="math inline">\(F_{\text{inf}} =
+0{,}553\)</span> y <span class="math inline">\(F_{\text{sup}} =
+1{,}8463\)</span>. Como el valor observado se encuentra entre ambos
+límites críticos, es decir, <span class="math inline">\(0{,}553 &lt;
+1{,}008 &lt; 1{,}8463\)</span>, se concluye que <strong>no se rechaza la
+hipótesis nula</strong>.</p>
+</div>
+<div id="metódo-2---valor_p-5" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p><span class="math display">\[
+p = 0{,}9844 &gt; \alpha = 0{,}05
+\]</span> El valor calculado del valor p fue <span
+class="math inline">\(p = 0{,}9844\)</span>, el cual es
+considerablemente mayor que el nivel de significancia establecido <span
+class="math inline">\(\alpha = 0{,}05\)</span>. Dado que <span
+class="math inline">\(p &gt; \alpha\)</span>, se concluye que <strong>no
+se rechaza la hipótesis nula</strong>.</p>
+</div>
+</div>
+<div id="paso-6-conclusión-2" class="section level2">
+<h2>Paso 6: Conclusión</h2>
+<p>En definitiva, los resultados obtenidos indican que <strong>no hay
+suficiente evidencia estadística para afirmar que las varianzas del
+contenido de sodio en las dos muestras sean diferentes</strong>. A pesar
+de que los valores muestrales (estadísticos) presentan cierta
+variabilidad, esta diferencia no es estadísticamente significativa al
+nivel de significancia establecido. Por tanto, se concluye que las
+varianzas pueden considerarse estadísticamente iguales con base en los
+resultados observados.</p>
+</div>
+</div>
+<div
+id="intervalo-de-confianza-para-la-diferencia-de-promedios-de-sodio-utilizando-la-información-de-las-dos-muestras-generadas-con-un-nivel-de-significancia-del-005."
+class="section level1">
+<h1>9. Intervalo de confianza para la diferencia de promedios de sodio,
+utilizando la información de las dos muestras generadas, con un nivel de
+significancia del 0,05.</h1>
+<p>En este caso, al continuar trabajando con dos muestras
+independientes, y dado que se desconocen las varianzas poblacionales, se
+requiere utilizar la distribución <span class="math inline">\(t\)</span>
+de Student para construir el intervalo de confianza. Sin embargo, en el
+análisis previo se concluyó que no existen diferencias significativas
+entre las varianzas, por lo que se asume que las varianzas poblacionales
+son iguales. A partir de esta suposición, se determinarán los valores
+relevantes y se construirá un intervalo de confianza para la diferencia
+de medias del contenido de sodio, utilizando el estadístico <span
+class="math inline">\(t\)</span> y un nivel de significancia de <span
+class="math inline">\(\alpha = 0{,}05\)</span>, es decir, un nivel de
+confianza del 95%.</p>
+<div id="datos-3" class="section level2">
+<h2>Datos</h2>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>tabla_resumen <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>  <span class="at">Grupo =</span> <span class="fu">c</span>(<span class="st">&quot;Muestra 1&quot;</span>, <span class="st">&quot;Muestra 2&quot;</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>  <span class="st">`</span><span class="at">n</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">40</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>  <span class="st">`</span><span class="at">Media</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">mean</span>(muestra_aleatoria<span class="sc">$</span>sodium), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">mean</span>(muestra_aleatoria2<span class="sc">$</span>sodium), <span class="dv">2</span>)),</span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  <span class="st">`</span><span class="at">s²</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">6907.4</span>, <span class="fl">6852.82</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>)</span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a>tabla_resumen <span class="sc">%&gt;%</span></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Grupo&quot;</span>, <span class="st">&quot;n&quot;</span>, <span class="st">&quot;$</span><span class="sc">\\</span><span class="st">bar{x}$&quot;</span>, <span class="st">&quot;s&lt;sup&gt;2&lt;/sup&gt;&quot;</span>),</span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
+<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">&quot;c&quot;</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>    <span class="at">escape =</span> <span class="cn">FALSE</span></span>
+<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb35-16"><a href="#cb35-16" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
+<span id="cb35-17"><a href="#cb35-17" tabindex="-1"></a>    <span class="at">full_width =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb35-18"><a href="#cb35-18" tabindex="-1"></a>    <span class="at">font_size =</span> <span class="dv">16</span>,</span>
+<span id="cb35-19"><a href="#cb35-19" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;bordered&quot;</span>)</span>
+<span id="cb35-20"><a href="#cb35-20" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb35-21"><a href="#cb35-21" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="dv">0</span>, <span class="at">bold =</span> <span class="cn">TRUE</span>, <span class="at">background =</span> <span class="st">&quot;#D9D9D9&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-22"><a href="#cb35-22" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">border_left =</span> <span class="cn">TRUE</span>, <span class="at">border_right =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-23"><a href="#cb35-23" tabindex="-1"></a>  <span class="fu">kable_classic</span>(<span class="at">html_font =</span> <span class="st">&quot;Cambria&quot;</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed table-bordered lightable-classic" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto; font-family: Cambria; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+Grupo
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+n
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+<span class="math inline">\(\bar{x}\)</span>
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+s<sup>2</sup>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 1
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+50
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+165.5
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6907.40
+</td>
+</tr>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 2
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+40
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+163.5
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6852.82
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="calcular-el-valor-de-t-y-los-grados-de-libertad"
+class="section level2">
+<h2>Calcular el valor de t y los grados de libertad</h2>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># Nivel de significancia</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>alpha_3 <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a><span class="co"># 1. Grados de libertad</span></span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>gl <span class="ot">&lt;-</span> n_1 <span class="sc">+</span> n_2 <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a><span class="co"># 2. Valores críticos t bilateral</span></span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a>t_critico_pos <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha_3<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> gl)</span>
+<span id="cb36-8"><a href="#cb36-8" tabindex="-1"></a>t_critico_neg <span class="ot">&lt;-</span> <span class="sc">-</span>t_critico_pos</span>
+<span id="cb36-9"><a href="#cb36-9" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" tabindex="-1"></a><span class="co"># 3. Imprimir resultados</span></span>
+<span id="cb36-11"><a href="#cb36-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Grados de libertad:&quot;</span>, gl, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Grados de libertad: 88</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico inferior:&quot;</span>, <span class="fu">round</span>(t_critico_neg, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Valor crítico inferior: -1.9873</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico superior:&quot;</span>, <span class="fu">round</span>(t_critico_pos, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Valor crítico superior: 1.9873</code></pre>
+</div>
+<div id="calcular-sp" class="section level2">
+<h2>Calcular Sp</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="co"># 1. Cálculo de sp</span></span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">sqrt</span>( ((n_1 <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span>varianza_1 <span class="sc">+</span> (n_2 <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span>varianza_2) <span class="sc">/</span> (n_1 <span class="sc">+</span> n_2 <span class="sc">-</span> <span class="dv">2</span>) )</span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a><span class="co"># 2. Impresión de resultado</span></span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Desviación estándar combinada (s_p):&quot;</span>, <span class="fu">round</span>(sp, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Desviación estándar combinada (s_p): 82.9651</code></pre>
+</div>
+<div id="calcular-los-limites-del-intervalo-de-confianza"
+class="section level2">
+<h2>Calcular los limites del intervalo de confianza</h2>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="co"># 1. Medias muestrales</span></span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>media1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(muestra_aleatoria<span class="sc">$</span>sodium)</span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>media2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(muestra_aleatoria2<span class="sc">$</span>sodium)</span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a><span class="co"># 2. Diferencia de medias</span></span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>diferencia_medias <span class="ot">&lt;-</span> media1 <span class="sc">-</span> media2</span>
+<span id="cb44-7"><a href="#cb44-7" tabindex="-1"></a></span>
+<span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a><span class="co"># 3. Error estándar</span></span>
+<span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>error_estandar <span class="ot">&lt;-</span> sp <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">/</span>n_1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_2)</span>
+<span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a><span class="co"># Límites del intervalo</span></span>
+<span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a>lim_inf <span class="ot">&lt;-</span> diferencia_medias <span class="sc">-</span> t_critico_pos <span class="sc">*</span> error_estandar</span>
+<span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a>lim_sup <span class="ot">&lt;-</span> diferencia_medias <span class="sc">+</span> t_critico_pos <span class="sc">*</span> error_estandar</span>
+<span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb44-16"><a href="#cb44-16" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Intervalo de confianza (95%) para la diferencia de medias:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Intervalo de confianza (95%) para la diferencia de medias:</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lim_inf, <span class="dv">2</span>), <span class="st">&quot;,&quot;</span>, <span class="fu">round</span>(lim_sup, <span class="dv">2</span>), <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## [ -32.98 , 36.98 ]</code></pre>
+<p>Es decir: <span class="math display">\[
+-32{,}98 &lt; \mu_1 - \mu_2 &lt; 36{,}98
+\]</span></p>
+<p>Como se observa, el valor <span class="math inline">\(0\)</span> se
+encuentra dentro del intervalo de confianza calculado. Por tanto, con un
+95% de confianza, se concluye que <strong>no hay evidencia estadística
+suficiente para afirmar que exista una diferencia significativa entre
+las medias poblacionales del contenido de sodio en ambas
+muestras</strong>.</p>
+</div>
+</div>
+<div
+id="prueba-de-hipótesis-para-verificar-si-los-promedios-de-sodio-son-iguales-o-diferentes-utilizando-la-información-de-las-dos-muestras-generadas-y-empleando-un-nivel-de-significancia-del-005."
+class="section level1">
+<h1>10. Prueba de hipótesis para verificar si los promedios de sodio son
+iguales o diferentes, utilizando la información de las dos muestras
+generadas y empleando un nivel de significancia del 0,05.</h1>
+<p>Dado que se trabaja con dos muestras independientes y se desconoce la
+varianza poblacional, pero se asume que ambas varianzas son iguales
+(según la prueba previa), se empleará el estadístico t de Student para
+comparar los promedios poblacionales de sodio.</p>
+<div id="datos-4" class="section level2">
+<h2>Datos</h2>
+<table class="table table-striped table-hover table-condensed table-bordered lightable-classic" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto; font-family: Cambria; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+Grupo
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+n
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+<span class="math inline">\(\bar{x}\)</span>
+</th>
+<th style="text-align:center;font-weight: bold;background-color: rgba(217, 217, 217, 255) !important;">
+s<sup>2</sup>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 1
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+50
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+165.5
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6907.40
+</td>
+</tr>
+<tr>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+Muestra 2
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+40
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+163.5
+</td>
+<td style="text-align:center;border-left:1px solid;border-right:1px solid;">
+6852.82
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="paso-1-formulación-de-h_0-y-h_1-3" class="section level2">
+<h2>Paso 1: Formulación de <span class="math inline">\(H_0\)</span> y
+<span class="math inline">\(H_1\)</span></h2>
+<p><span class="math display">\[
+H_0: \mu_1 = \mu_2 \\
+H_1: \mu_1 \ne \mu_2
+\]</span></p>
+<p>Se plantea esta formulación porque se desea evaluar si las medias
+poblacionales son diferentes o iguales, por tanto, la hipótesis
+alternativa (<span class="math inline">\(H_1\)</span>) se establece como
+<span class="math inline">\(\mu_1 \ne \mu_2\)</span>, ya que es lo que
+se quiere probar, y la hipótesis nula (<span
+class="math inline">\(H_0\)</span>) como su complemento lógico: <span
+class="math inline">\(\mu_1 = \mu_2\)</span>. Dado que la dirección de
+la prueba la determina <span class="math inline">\(H_1\)</span>, esta
+corresponde a una <strong>prueba bilateral</strong>.</p>
+</div>
+<div id="paso-2-definición-de-nivel-de-significancia-3"
+class="section level2">
+<h2>Paso 2: Definición de nivel de significancia</h2>
+<p><span class="math display">\[
+\alpha = 0{,}05
+\]</span> ## Paso 3: Cálculo de estadístico de prueba</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="co"># 1. Valor de la diferencia de medias bajo la hipótesis nula</span></span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>mu_diferencia <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a><span class="co"># 2. Error estándar</span></span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>se_2 <span class="ot">&lt;-</span> sp <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">/</span>n_1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_2) </span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a><span class="co"># 3. Estadístico t</span></span>
+<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a>t_prueba2 <span class="ot">&lt;-</span> ((media1 <span class="sc">-</span> media2) <span class="sc">-</span> mu_diferencia) <span class="sc">/</span> se_2</span>
+<span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="#cb48-10" tabindex="-1"></a><span class="co"># 4. Mostrar resultado</span></span>
+<span id="cb48-11"><a href="#cb48-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estadístico t =&quot;</span>, <span class="fu">round</span>(t_prueba2, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Estadístico t = 0.1136</code></pre>
+<p><span class="math display">\[
+t = \frac{(165.5 - 163.5) - 0}{82.97 \cdot \sqrt{\frac{1}{50} +
+\frac{1}{40}}} = 0.1136
+\]</span></p>
+</div>
+<div id="paso-4-formulación-de-regla-de-decisión-3"
+class="section level2">
+<h2>Paso 4: Formulación de regla de decisión</h2>
+<div id="metódo-1---región-crítica-6" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>Para aplicar el método de la región crítica, primero es necesario
+calcular los valores críticos de la distribución t, dado que se trata de
+una prueba bilateral. En este caso, el nivel de significancia <span
+class="math inline">\(\alpha = 0{,}05\)</span> se divide en dos partes,
+asignando <span class="math inline">\(\alpha/2 = 0{,}025\)</span> a cada
+cola, utilizando los grados de libertad correspondientes a cada muestra
+(<span class="math inline">\(gl_1 = 50 - 1 = 49\)</span> y <span
+class="math inline">\(gl_2 = 40 - 1 = 39\)</span>), se determinan los
+puntos críticos que definen los límites de la región de rechazo,
+permitiendo así la comparación con el valor del estadístico t
+calculado.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="co"># 1. Grados de libertad</span></span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>gl <span class="ot">&lt;-</span> n_1 <span class="sc">+</span> n_2 <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a><span class="co"># Calcular el valor crítico t para una prueba bilateral</span></span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>t_critico_superior1 <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha_3<span class="sc">/</span><span class="dv">2</span>, <span class="at">df =</span> gl)  <span class="co"># Valor crítico superior</span></span>
+<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>t_critico_inferior2 <span class="ot">&lt;-</span> <span class="sc">-</span>t_critico_superior1  <span class="co"># Valor crítico inferior</span></span>
+<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a><span class="co"># Mostrar los resultados</span></span>
+<span id="cb50-9"><a href="#cb50-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico t inferior =&quot;</span>, <span class="fu">round</span>(t_critico_inferior2, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Valor crítico t inferior = -1.9873</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor crítico t superior =&quot;</span>, <span class="fu">round</span>(t_critico_superior1, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Valor crítico t superior = 1.9873</code></pre>
+<p><img src="about_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+### Metódo 2 - Valor_p</p>
+<p>Para complementar el análisis, se aplica el método del valor p, que
+permite contrastar la hipótesis nula evaluando la probabilidad de
+obtener un valor del estadístico de prueba tan extremo como el
+observado, bajo el supuesto de que <span
+class="math inline">\(H_0\)</span> es verdadera. Dado que se trata de
+una <strong>prueba bilateral</strong>, el valor p se calcula como la
+probabilidad de obtener un valor del estadístico t más extremo que el
+observado, considerando tanto la cola izquierda como la cola derecha de
+la distribución:</p>
+<p><span class="math display">\[
+P(t &gt; 0.1136)
+\]</span></p>
+<p>En nuestro caso específico, dado que el valor calculado del
+estadístico t es <span class="math inline">\(t = 0.1136\)</span>, se
+debe evaluar la probabilidad de que una variable aleatoria t sea más
+extrema que este valor, bajo el supuesto de que la hipótesis nula es
+verdadera.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="co"># 1. Cálculo del valor p (prueba bilateral con t)</span></span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a>valor_p_t <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(t_prueba2), <span class="at">df =</span> gl, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a><span class="co"># 2. Mostrar resultado</span></span>
+<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Valor p =&quot;</span>, <span class="fu">round</span>(valor_p_t, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>## Valor p = 0.9098</code></pre>
+</div>
+</div>
+<div id="paso-5-toma-de-decisión-con-respecto-a-las-hipótesis-3"
+class="section level2">
+<h2>Paso 5: Toma de decisión con respecto a las hipótesis</h2>
+<div id="metódo-1---región-crítica-7" class="section level3">
+<h3>Metódo 1 - Región crítica</h3>
+<p>En este caso, como se observa en la gráfica, el valor calculado del
+estadístico de prueba <span class="math inline">\(t = 0.1136\)</span> se
+encuentra dentro de la región de no rechazo, ya que está entre los
+valores críticos <span class="math inline">\(t = -1.9873\)</span> y
+<span class="math inline">\(t = 1.9873\)</span>. Dado que el estadístico
+de prueba no cae dentro de la región crítica,<strong>no se rechaza la
+hipótesis nula</strong>. Esto indica que no existe evidencia suficiente
+para afirmar que las medias de los dos grupos son significativamente
+diferentes.</p>
+</div>
+<div id="metódo-2---valor_p-6" class="section level3">
+<h3>Metódo 2 - Valor_p</h3>
+<p><span class="math display">\[
+p = 0{,}9098&gt; \alpha = 0{,}05
+\]</span> Como el valor p es mayor que <span
+class="math inline">\(\alpha\)</span>, no se rechaza la hipótesis nula
+<span class="math inline">\(H_0\)</span>.</p>
+</div>
+</div>
+<div id="paso-6-conclusión-3" class="section level2">
+<h2>Paso 6: Conclusión</h2>
+<p>En el análisis realizado para comparar los promedios de sodio de las
+dos muestras, se aplicaron dos métodos complementarios: el valor p y la
+región crítica. El valor p calculado fue mayor que el nivel de
+significancia <span class="math inline">\(\alpha = 0.05\)</span>,
+indicando que no se rechaza la hipótesis nula. De manera similar, el
+estadístico de prueba <span class="math inline">\(t = 0.1136\)</span> se
+situó dentro de la región de no rechazo, entre los valores críticos
+<span class="math inline">\(t = -1.9873\)</span> y <span
+class="math inline">\(t = 1.9873\)</span>, lo que también llevó a no
+rechazar la hipótesis nula, estos resultados sugieren que no hay
+evidencia estadística suficiente para concluir que las medias de sodio
+de las dos muestras difieren significativamente.</p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkVzdGltYWNpw7NuIGVzdGFkw61zdGljYSINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICB0b2M6IHRydWUNCiAgICB0b2NfZmxvYXQ6DQogICAgICBjb2xsYXBzZWQ6IHRydWUNCiAgICAgIHNtb290aF9zY3JvbGw6IHRydWUNCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlDQogICAgdGhlbWU6IGx1bWVuIA0KICAgIHRvY19kZXB0aDogMyANCiAgICBjc3M6IHN0eWxlcy5jc3MNCiAgICBwYW5kb2NfYXJnczogWyItLXZhcmlhYmxlPWZvb3Rub3Rlcy10aXRsZTpCaWJsaW9ncmFmw61hIl0NCi0tLQ0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQpsaWJyYXJ5KGtuaXRyKQ0KbGlicmFyeShyZWFkeGwpDQpsaWJyYXJ5KERUKQ0KbGlicmFyeShrYWJsZUV4dHJhKQ0KbGlicmFyeShkcGx5cikNCmxpYnJhcnkoZ2dwbG90MikNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UpDQpjZXJlYWwxIDwtIHJlYWRfZXhjZWwoIkM6L1VzZXJzL1VzZXIvRG93bmxvYWRzL2NlcmVhbDEueGxzeCIpDQpgYGANCmBgYHtjc3MsZWNobz1GQUxTRX0NCi5jb2x1bW4ge2Rpc3BsYXk6ZmxleDt9DQpoMXtjb2xvcjpyZ2IoMjYsIDcyLCAxMTIpfQ0KaDJ7Y29sb3I6cmdiKDI2LCA3MiwgMTEyKX0NCmgze2NvbG9yOnJnYigyNiwgNzIsIDExMil9DQpgYGANCg0KIyBNdWVzdHJlbyB5IHBydWViYSBkZSBoaXDDs3Rlc2lzDQoNCiMgNC4gTXVlc3RyYSBhbGVhdG9yaWEgc2ltcGxlIGRlIDUwIGNlcmVhbGVzDQoNCmBgYHtyfQ0KIyAxLiBEZWZpbmljacOzbiBkZSBsYSBzZW1pbGxhIHBhcmEgYXNlZ3VyYXIgbGEgcmVwcm9kdWNpYmlsaWRhZCBkZWwgbXVlc3RyZW8NCnNldC5zZWVkKDEyMykNCg0KIyAyLiBTZSBhc2lnbmEgdW4gSUQgw7puaWNvIGEgY2FkYSBjZXJlYWwgcGFyYSBmYWNpbGl0YXIgc3UgaWRlbnRpZmljYWNpw7NuIHBvc3Rlcmlvcg0KY2VyZWFsMSRJRF9PcmlnaW5hbCA8LSAxOm5yb3coY2VyZWFsMSkNCg0KIyAzLiBEZWZpbmljacOzbiBkZWwgdGFtYcOxbyBkZSBsYSBtdWVzdHJhDQpuXzEgPC0gNTAgIA0KDQojIDQuIFNlbGVjY2nDs24gZGUgbGEgbXVlc3RyYSBhbGVhdG9yaWEgc2ltcGxlIFNJTiByZWVtcGxhem8NCm11ZXN0cmVvX2FsZWF0b3JpbyA8LSBzYW1wbGUoMTpucm93KGNlcmVhbDEpLCBzaXplID0gbl8xLCByZXBsYWNlID0gRkFMU0UpDQoNCiMgNS4gQ3JlYWNpw7NuIGRlbCBzdWJjb25qdW50byBkZSBkYXRvcyBjb24gbG9zIGNlcmVhbGVzIHNlbGVjY2lvbmFkb3MNCm11ZXN0cmFfYWxlYXRvcmlhIDwtIGNlcmVhbDFbbXVlc3RyZW9fYWxlYXRvcmlvLCBdDQoNCiMgNi4gVGFibGEgcXVlIHByZXNlbnRhIGxvcyBkYXRvcyBkZSBsYSBtdWVzdHJhIHNlbGVjY2lvbmFkYQ0KZGF0YXRhYmxlKA0KICBtdWVzdHJhX2FsZWF0b3JpYVssIGMoIklEX09yaWdpbmFsIiwgbmFtZXMoY2VyZWFsMSlbbmFtZXMoY2VyZWFsMSkgIT0gIklEX09yaWdpbmFsIl0pXSwgDQogIG9wdGlvbnMgPSBsaXN0KA0KICAgIHBhZ2VMZW5ndGggPSAxMCwNCiAgICBhdXRvV2lkdGggPSBUUlVFLA0KICAgIHNlYXJjaGluZyA9IFRSVUUsDQogICAgc2Nyb2xsWCA9IFRSVUUsDQogICAgbGVuZ3RoTWVudSA9IGxpc3QoYygxMCwgMjAsIDUwLCAtMSksIGMoIjEwIiwgIjIwIiwgIjUwIiwgIlRvZG9zIikpDQogICksDQogIGNhcHRpb24gPSAiTXVlc3RyYSBBbGVhdG9yaWEgZGUgQ2VyZWFsZXMiLA0KICByb3duYW1lcyA9IEZBTFNFDQopDQpgYGANCg0KIyA1LiBVbiBhcnTDrWN1bG8gaW5kaWNhIHF1ZSBlbCBjb25qdW50byBkZSBjZXJlYWxlcyBkZSBsYSB0YWJsYSBlc3RhbiBkZW50cm8gZGUgbG9zIG3DoXMgc2FsdWRhYmxlcyBkZWwgbWVyY2Fkby4gSW5kaWNhIHF1ZSBlbiBwcm9tZWRpbyB0aWVuZSBtZW5vcyBkZSAxNDBtZyBkZSBzb2Rpby4gVXRpbGl6YW5kbyBsYSBpbmZvcm1hY2nDs24gZGUgbGEgbXVlc3RyYSBnZW5lcmFkYSBlbiBlbCDDrXRlbSA0IHBydWViZSAgZXN0YSBhZmlybWFjacOzbiBhIHVuIG5pdmVsIGRlIHNpZ25pZmljYWNpYSBkZSAwLDA1LiANCg0KQW50ZXMgZGUgcmVhbGl6YXIgbGEgcHJ1ZWJhIGRlIGhpcMOzdGVzaXMsIGVzIGltcG9ydGFudGUgc2XDsWFsYXIgcXVlIHNlIGN1ZW50YSBjb24gbGEgYmFzZSBkZSBkYXRvcyBjb21wbGV0YSwgbGEgY3VhbCByZXByZXNlbnRhIGEgbGEgcG9ibGFjacOzbiBlbiBzdSB0b3RhbGlkYWQsIGxvIGN1YWwgcGVybWl0ZSBjYWxjdWxhciBkaXJlY3RhbWVudGUgcGFyw6FtZXRyb3MgcG9ibGFjaW9uYWxlcyBjb21vIGxhIGRlc3ZpYWNpw7NuIGVzdMOhbmRhciBkZWwgY29udGVuaWRvIGRlIHNvZGlvLCBxdWUgc2Vyw6EgdXRpbGl6YWRhIHBhcmEgYXBsaWNhciBsYSBwcnVlYmEgbWVkaWFudGUgdW5hIGRpc3RyaWJ1Y2nDs24gbm9ybWFsIChaKSwgY29uc2lkZXJhbmRvIHF1ZSBsYSBtdWVzdHJhIGFsZWF0b3JpYSBzZWxlY2Npb25hZGEgdGllbmUgdW4gdGFtYcOxbyBkZSA1MCwgbG8gY3VhbCBzZSBjb25zaWRlcmEgc3VmaWNpZW50ZW1lbnRlIGdyYW5kZS4gRXN0ZSBlbmZvcXVlIGVzIHbDoWxpZG8sIHlhIHF1ZSBubyBlcyBuZWNlc2FyaW8gZXN0aW1hciBsYSB2YXJpYWJpbGlkYWQgYSBwYXJ0aXIgZGUgdW5hIG11ZXN0cmEgY3VhbmRvIHNlIGNvbm9jZSBsYSB2YXJpYWJpbGlkYWQgcmVhbCBkZSB0b2RhIGxhIHBvYmxhY2nDs24uDQpBc2ltaXNtbywgc2UgY2FsY3VsYXLDoSBsYSBtZWRpYSBtdWVzdHJhbCBkZWwgc29kaW8sIHlhIHF1ZSBlc3RlIHZhbG9yIGVzIGVzZW5jaWFsIHBhcmEgZGV0ZXJtaW5hciBlbCBlc3RhZMOtc3RpY28gWiwgZWwgY3VhbCBub3MgcGVybWl0aXLDoSBjb250cmFzdGFyIGxhIGhpcMOzdGVzaXMgcGxhbnRlYWRhLg0KDQpgYGB7cn0NCiMgMS4gTWVkaWEgbXVlc3RyYWwNCm1lZGlhX211ZXN0cmFsIDwtIG1lYW4obXVlc3RyYV9hbGVhdG9yaWEkc29kaXVtLCBuYS5ybSA9IFRSVUUpDQoNCiMgMi4gRGVzdmlhY2nDs24gZXN0w6FuZGFyIHBvYmxhY2lvbmFsDQpkZXN2aWFjaW9uX3BvYmxhY2lvbmFsIDwtIHNkKGNlcmVhbDEkc29kaXVtLCBuYS5ybSA9IFRSVUUpDQoNCiMgMy4gSW1wcmVzacOzbiBkZSByZXN1bHRhZG9zDQpjYXQoIk1lZGlhIG11ZXN0cmFsICh4zIQpOiIsIHJvdW5kKG1lZGlhX211ZXN0cmFsLCAyKSwgIlxuIikNCmNhdCgiRGVzdmlhY2nDs24gZXN0w6FuZGFyIHBvYmxhY2lvbmFsICjPgyk6Iiwgcm91bmQoZGVzdmlhY2lvbl9wb2JsYWNpb25hbCwgMiksICJcbiIpDQpgYGANCiMjIERhdG9zIA0KDQpBaG9yYSBiaWVuLCB0ZW5pZW5kbyBlbiBjdWVudGEgbGFzIGFudGVyaW9yZXMgbWVkaWRhcywgcHJvY2VkZXJlbW9zIGEgYWdydXBhciB0b2RvcyBsb3MgZGF0b3MgbmVjZXNhcmlvcyBwYXJhIGVsIGRlc2Fycm9sbG8gZGUgbGEgcHJ1ZWJhIGRlIGhpcMOzdGVzaXMsIGNvbiBlbCBmaW4gZGUgZmFjaWxpdGFyIGVsIHByb2NlZGltaWVudG86DQoNCi0gJFxiYXJ7eH0gPSAxNjV7LH01MCQNCi0gJG4gPSA1MCQNCi0gJFxtdV8wID0gMTQwJA0KLSAkXHNpZ21hID0gODN7LH04MyQNCg0KIyMgUGFzbyAxOiBGb3JtdWxhY2nDs24gZGUgJEhfMCQgeSAkSF8xJA0KDQokJA0KSF8wOiBcbXUgXGdlcSAxNDBcIFx0ZXh0e21nfSBcXA0KSF8xOiBcbXUgPCAxNDBcIFx0ZXh0e21nfQ0KJCQNCkxhIGZvcm11bGFjacOzbiBkZSBsYXMgaGlww7N0ZXNpcyByZXNwb25kZSBhbCBvYmpldGl2byBkZWwgZXN0dWRpbywgcXVlIGNvbnNpc3RlIGVuIGV2YWx1YXIgc2kgZWwgY29udGVuaWRvIHByb21lZGlvIGRlIHNvZGlvIGVuIGxvcyBjZXJlYWxlcyBlcyBtZW5vciBhIDE0MCBtZy4gUG9yIGVzdGEgcmF6w7NuLCBsYSBoaXDDs3Rlc2lzIGFsdGVybmF0aXZhICgkSF8xJCkgc2UgcGxhbnRlYSBjb21vICRcbXUgPCAxNDBcIFx0ZXh0e21nfSQsIHlhIHF1ZSBlcyBsbyBxdWUgc2UgZGVzZWEgcHJvYmFyLiBQb3IgdGFudG8sIGxhIGhpcMOzdGVzaXMgbnVsYSAoJEhfMCQpIHNlIGVzdGFibGVjZSBjb21vIGVsIGNvbXBsZW1lbnRvIGzDs2dpY28gZGUgJEhfMSQsIGVzIGRlY2lyLCAkXG11IFxnZXEgMTQwXCBcdGV4dHttZ30kLiBFc3RhIGZvcm11bGFjacOzbiBwZXJtaXRlIGFwbGljYXIgY29ycmVjdGFtZW50ZSBsYSBwcnVlYmEgdW5pbGF0ZXJhbCBjb24gY29sYSBoYWNpYSBsYSBpenF1aWVyZGEuDQoNCiMjIFBhc28gMjogRGVmaW5pY2nDs24gZGUgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYQ0KDQokJA0KXGFscGhhID0gMHssfTA1DQokJA0KRWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSB1dGlsaXphZG8gZW4gZXN0YSBwcnVlYmEgZXMgJFxhbHBoYSA9IDB7LH0wNSQsIHZhbG9yIHF1ZSBmdWUgZXN0YWJsZWNpZG8gZW4gZWwgZW51bmNpYWRvIGRlbCBlamVyY2ljaW8uIEVzdGUgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSByZXByZXNlbnRhIGxhIHByb2JhYmlsaWRhZCBtw6F4aW1hIGRlIGNvbWV0ZXIgdW4gZXJyb3IgdGlwbyBJLCBlcyBkZWNpciwgcmVjaGF6YXIgbGEgaGlww7N0ZXNpcyBudWxhIGN1YW5kbyBlbiByZWFsaWRhZCBlcyB2ZXJkYWRlcmEuDQoNCiMjIFBhc28gMzogQ8OhbGN1bG8gZGUgZXN0YWTDrXN0aWNvIGRlIHBydWViYSANCg0KYGBge3J9DQptdV8wIDwtIDE0MA0KIyAxLiBFc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIFoNCnpfcHJ1ZWJhIDwtIChtZWRpYV9tdWVzdHJhbCAtIG11XzApIC8gKGRlc3ZpYWNpb25fcG9ibGFjaW9uYWwgLyBzcXJ0KG5fMSkpDQoNCiMgMi4gSW1wcmVzacOzbiBkZSByZXN1bHRhZG8gDQpjYXQoIkVzdGFkw61zdGljbyBkZSBwcnVlYmEgWiA9Iiwgcm91bmQoel9wcnVlYmEsIDQpKQ0KYGBgDQokJA0KWiA9IFxmcmFje1xiYXJ7eH0gLSBcbXVfMH17XHNpZ21hIC8gXHNxcnR7bn19ID0gXGZyYWN7MTY1eyx9NTAgLSAxNDB9ezgzeyx9ODMgLyBcc3FydHs1MH19ID0gMnssfTE1MDkNCiQkDQoNCkVsIHZhbG9yIGNhbGN1bGFkbyBkZWwgZXN0YWTDrXN0aWNvIGRlIHBydWViYSBlcyAkWiA9IDJ7LH0xNTA5JC4gRXN0ZSByZXN1bHRhZG8gc2Vyw6EgdXRpbGl6YWRvIHBhcmEgYXBsaWNhciBkb3MgbcOpdG9kb3MgZGUgZGVjaXNpw7NuOiBlbCBkZSBsYSByZWdpw7NuIGNyw610aWNhIHkgZWwgZGVsIHZhbG9yIHAuIEVuIGVsIHByaW1lciBjYXNvLCBzZSBjb21wYXJhcsOhIGNvbiBlbCB2YWxvciBjcsOtdGljbyBjb3JyZXNwb25kaWVudGUgYWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBlc3RhYmxlY2lkby4gRW4gZWwgc2VndW5kbywgc2UgY2FsY3VsYXLDoSBsYSBwcm9iYWJpbGlkYWQgYXNvY2lhZGEgYSBlc3RlIHZhbG9yIGRlICRaJCB5IHNlIGNvbXBhcmFyw6EgY29uICRcYWxwaGEgPSAweyx9MDUkLiBBbWJvcyBlbmZvcXVlcyBwZXJtaXRpcsOhbiBkZXRlcm1pbmFyIHNpIGV4aXN0ZSBldmlkZW5jaWEgc3VmaWNpZW50ZSBwYXJhIHJlY2hhemFyIGxhIGhpcMOzdGVzaXMgbnVsYSBlbiBmYXZvciBkZSBsYSBhbHRlcm5hdGl2YS4NCg0KIyMgUGFzbyA0OiBGb3JtdWxhY2nDs24gZGUgcmVnbGEgZGUgZGVjaXNpw7NuDQojIyMgTWV0w7NkbyAxIC0gUmVnacOzbiBjcsOtdGljYQ0KDQpQYXJhIGFwbGljYXIgZWwgbcOpdG9kbyBkZSBsYSByZWdpw7NuIGNyw610aWNhLCBlcyBuZWNlc2FyaW8gZGV0ZXJtaW5hciBlbCB2YWxvciBjcsOtdGljbyBjb3JyZXNwb25kaWVudGUgYWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBlc3RhYmxlY2lkby4gRGFkbyBxdWUgc2UgdHJhdGEgZGUgdW5hIHBydWViYSB1bmlsYXRlcmFsIGRlIGNvbGEgaXpxdWllcmRhLCBlbCB2YWxvciBjcsOtdGljbyAkel9cYWxwaGEkIHNlIG9idGllbmUgYSBwYXJ0aXIgZGUgbGEgZGlzdHJpYnVjacOzbiBub3JtYWwgZXN0w6FuZGFyIHkgcmVwcmVzZW50YSBlbCBwdW50byBkZSBjb3J0ZSBlbiBsYSBjb2xhIGl6cXVpZXJkYSBjb24gdW5hIHByb2JhYmlsaWRhZCBhY3VtdWxhZGEgaWd1YWwgYSAkXGFscGhhID0gMHssfTA1JC4gQ3VhbHF1aWVyIHZhbG9yIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIG1lbm9yIGEgJHpfXGFscGhhJCBzZSB1YmljYXLDoSBkZW50cm8gZGUgbGEgcmVnacOzbiBjcsOtdGljYSwgbG8gY3VhbCBpbXBsaWNhcsOtYSBlbCByZWNoYXpvIGRlIGxhIGhpcMOzdGVzaXMgbnVsYS4NCg0KYGBge3J9DQojIDEuIE5pdmVsIGRlIHNpZ25pZmljYW5jaWENCmFscGhhIDwtIDAuMDUNCg0KIyAyLiBDw6FsY3VsbyBkZWwgdmFsb3IgY3LDrXRpY28geiBwYXJhIHVuYSBjb2xhIGl6cXVpZXJkYQ0Kel9jcml0aWNvIDwtIHFub3JtKGFscGhhKQ0KDQojIDMuIE1vc3RyYXIgZWwgcmVzdWx0YWRvDQpjYXQoIlZhbG9yIGNyw610aWNvICh6WzAuMDVdKSA9Iiwgcm91bmQoel9jcml0aWNvLCA0KSkNCmBgYA0KYGBge3IsZWNobz1GQUxTRX0NCnhfdmFscyA8LSBzZXEoLTQsIDQsIGxlbmd0aC5vdXQgPSAxMDAwKQ0KZGVuc2lkYWQgPC0gZG5vcm0oeF92YWxzKQ0KZGYgPC0gZGF0YS5mcmFtZSh4ID0geF92YWxzLCB5ID0gZGVuc2lkYWQpDQoNCmdncGxvdChkZiwgYWVzKHgsIHkpKSArDQogIGdlb21fbGluZShjb2xvciA9ICJibGFjayIsbGluZXdpZHRoID0gMSkgKw0KICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLCBjb2xvciA9ICJibGFjayIsIHNpemUgPSAwLjUsbGluZXdpZHRoID0gMCw4KSArDQogIGdlb21fYXJlYShkYXRhID0gc3Vic2V0KGRmLCB4IDw9IHpfY3JpdGljbyksIGFlcyh4LCB5KSwgZmlsbCA9ICJyZWQiLCBhbHBoYSA9IDAuNCkgKw0KICBnZW9tX3NlZ21lbnQoYWVzKHggPSB6X2NyaXRpY28sIHhlbmQgPSB6X2NyaXRpY28sIHkgPSAwLCB5ZW5kID0gZG5vcm0oel9jcml0aWNvKSksIA0KICAgICAgICAgICAgICAgY29sb3IgPSAicmVkIiwgbGluZXR5cGUgPSAiZGFzaGVkIiwgc2l6ZSA9IDEpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gel9jcml0aWNvIC0gMC4xLCB5ID0gZG5vcm0oel9jcml0aWNvKSArIDAuMDIsIA0KICAgICAgICAgICBsYWJlbCA9IHBhc3RlMCgielx1MDNCMSA9ICIsIHJvdW5kKHpfY3JpdGljbywgNCkpLCBjb2xvciA9ICJyZWQiKSArDQogIGdlb21fc2VnbWVudChhZXMoeCA9IHpfcHJ1ZWJhLCB4ZW5kID0gel9wcnVlYmEsIHkgPSAwLCB5ZW5kID0gZG5vcm0oel9wcnVlYmEpKSwgDQogICAgICAgICAgICAgICBjb2xvciA9ICJibHVlIiwgbGluZXR5cGUgPSAiZG90dGVkIiwgc2l6ZSA9IDEpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gel9wcnVlYmEgKyAwLjIsIHkgPSBkbm9ybSh6X3BydWViYSkgKyAwLjAyLCANCiAgICAgICAgICAgbGFiZWwgPSBwYXN0ZTAoIlogPSAiLCByb3VuZCh6X3BydWViYSwgNCkpLCBjb2xvciA9ICJibHVlIikgKw0KDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IC0zLCB5ID0gMC4wNSwgbGFiZWwgPSAiUmVnacOzbiBkZSByZWNoYXpvIiwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDQpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gMCwgeSA9IDAuMiwgbGFiZWwgPSAiUmVnacOzbiBkZSBubyByZWNoYXpvIiwgY29sb3IgPSAiZGFya2dyZWVuIiwgc2l6ZSA9IDQpICsNCg0KICBzY2FsZV94X2NvbnRpbnVvdXMoDQogICAgbGltaXRzID0gYygtNCwgNCksDQogICAgYnJlYWtzID0gc2VxKC00LCA0LCBieSA9IDEpDQogICkgKw0KDQogIGxhYnMoDQogICAgdGl0bGUgPSAiRGlzdHJpYnVjacOzbiBOb3JtYWwgRXN0w6FuZGFyIiwNCiAgICBzdWJ0aXRsZSA9ICJSZWdpw7NuIGNyw610aWNhICjOsSA9IDAuMDUpIHkgdmFsb3IgWiBkZSBwcnVlYmEiLA0KICAgIHggPSAiWiIsDQogICAgeSA9ICJEZW5zaWRhZCINCiAgKSArDQogIHRoZW1lX21pbmltYWwoYmFzZV9zaXplID0gMTQpDQpgYGANCg0KDQojIyMgTWV0w7NkbyAyIC0gVmFsb3JfcA0KDQpQYXJhIGNvbXBsZW1lbnRhciBlbCBhbsOhbGlzaXMsIHNlIGFwbGljYSBlbCBtw6l0b2RvIGRlbCB2YWxvciBwLCBlbCBjdWFsIHBlcm1pdGUgY29udHJhc3RhciBsYSBoaXDDs3Rlc2lzIG51bGEgZXZhbHVhbmRvIGxhIHByb2JhYmlsaWRhZCBkZSBvYnRlbmVyIHVuIHZhbG9yIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIHRhbiBleHRyZW1vIGNvbW8gZWwgb2JzZXJ2YWRvLCBiYWpvIGVsIHN1cHVlc3RvIGRlIHF1ZSAkSF8wJCBlcyB2ZXJkYWRlcmEuIERhZG8gcXVlIHNlIHRyYXRhIGRlIHVuYSBwcnVlYmEgdW5pbGF0ZXJhbCBkZSBjb2xhIGl6cXVpZXJkYSwgZWwgdmFsb3IgcCBzZSBjYWxjdWxhIGNvbW8gbGEgcHJvYmFiaWxpZGFkIGRlIHF1ZSB1bmEgdmFyaWFibGUgYWxlYXRvcmlhIG5vcm1hbCBlc3TDoW5kYXIgdG9tZSB1biB2YWxvciBtZW5vciBhbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIG9idGVuaWRvOiANCg0KJCQNClAoWiA8IDJ7LH0xNTA5KQ0KJCQNCmBgYHtyfQ0KIyAxLiBDw6FsY3VsbyBkZWwgdmFsb3IgcCAocHJ1ZWJhIHVuaWxhdGVyYWwgaXpxdWllcmRhKQ0KdmFsb3JfcCA8LSBwbm9ybSh6X3BydWViYSkNCg0KIyAyLiBNb3N0cmFyIHJlc3VsdGFkbw0KY2F0KCJWYWxvciBwID0iLCByb3VuZCh2YWxvcl9wLCA0KSkNCmBgYA0KIyMgUGFzbyA1OiBUb21hIGRlIGRlY2lzacOzbiBjb24gcmVzcGVjdG8gYSBsYXMgaGlww7N0ZXNpcyANCg0KIyMjIE1ldMOzZG8gMSAtIFJlZ2nDs24gY3LDrXRpY2ENCg0KU2Vnw7puIGVsIG3DqXRvZG8gZGUgbGEgcmVnacOzbiBjcsOtdGljYSwgc2UgY29tcGFyYSBlbCB2YWxvciBkZWwgZXN0YWTDrXN0aWNvIGRlIHBydWViYSBjb24gZWwgdmFsb3IgY3LDrXRpY28gY29ycmVzcG9uZGllbnRlIGFsIG5pdmVsIGRlIHNpZ25pZmljYW5jaWEgJFxhbHBoYSA9IDB7LH0wNSQuIERhZG8gcXVlIGVsIHZhbG9yIGNhbGN1bGFkbyBkZWwgZXN0YWTDrXN0aWNvIGRlIHBydWViYSAkWiA9IDJ7LH0xNTA5JCBzZSBlbmN1ZW50cmEgYSBsYSBkZXJlY2hhIGRlbCB2YWxvciBjcsOtdGljbyAkel9cYWxwaGEgPSAtMXssfTY0NDkkLCBubyBjYWUgZGVudHJvIGRlIGxhIHJlZ2nDs24gY3LDrXRpY2EgKHViaWNhZGEgZW4gbGEgY29sYSBpenF1aWVyZGEgZGUgbGEgZGlzdHJpYnVjacOzbiksIHBvciBsbyB0YW50bywgKipubyBzZSByZWNoYXphIGxhIGhpcMOzdGVzaXMgbnVsYSoqLg0KDQojIyMgTWV0w7NkbyAyIC0gVmFsb3JfcA0KDQokJA0KcCA9IDB7LH05ODQzID4gXGFscGhhID0gMHssfTA1DQokJA0KDQpFbCB2YWxvciBvYnRlbmlkbyBmdWUgJHAgPSAweyx9OTg0NCQsIGVsIGN1YWwgZXMgKiptYXlvcioqIHF1ZSBlbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhICRcYWxwaGEgPSAweyx9MDUkLCBwb3IgdGFudG8sICoqbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEqKi4NCg0KIyMgUGFzbyA2OiBDb25jbHVzacOzbg0KDQpUYW50byBlbCBtw6l0b2RvIGRlIGxhIHJlZ2nDs24gY3LDrXRpY2EgY29tbyBlbCBkZWwgdmFsb3IgcCBjb25kdWNlbiBhIGxhICoqbWlzbWEgY29uY2x1c2nDs24qKjoqKm5vIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhKiogYWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBkZWwgNSUuIEVsIHZhbG9yIGRlbCBlc3RhZMOtc3RpY28gJFogPSAyeyx9MTUwOSQgbm8gY2FlIGVuIGxhIHJlZ2nDs24gY3LDrXRpY2EgZGVmaW5pZGEgcG9yICR6X1xhbHBoYSA9IC0xeyx9NjQ0OSQsIHkgZWwgdmFsb3IgcCBjYWxjdWxhZG8gKCRwID0gMHssfTk4NDQkKSBlcyBtYXlvciBxdWUgJFxhbHBoYSA9IDB7LH0wNSQuIFBvciBsbyB0YW50bywgKipubyBzZSBjdWVudGEgY29uIGV2aWRlbmNpYSBlc3RhZMOtc3RpY2FtZW50ZSBzaWduaWZpY2F0aXZhIHBhcmEgYWZpcm1hciBxdWUgZWwgY29udGVuaWRvIHByb21lZGlvIGRlIHNvZGlvIGVuIGxvcyBjZXJlYWxlcyBzZWEgbWVub3IgYSAxNDAgbWcqKi4gRXN0ZSByZXN1bHRhZG8gZXMgY29uc2lzdGVudGUgY29uIGVsIHZhbG9yIHBvYmxhY2lvbmFsIHJlYWwsIHlhIHF1ZSBhbCB0b21hciBlbiBjdWVudGEgdG9kYSBsYSBiYXNlIGRlIGRhdG9zLCBzZSBvYnNlcnZhIHF1ZSBsYSBtZWRpYSBwb2JsYWNpb25hbCBkZWwgc29kaW8gZXMgZGUgJDE1OXssfTY4JOKAr21nLCB1biB2YWxvciBjbGFyYW1lbnRlIHBvciBlbmNpbWEgZGVsIHZhbG9yIHByb3B1ZXN0by4gIA0KDQojIDYuICBVbmEgaW52ZXN0aWdhY2nDs24gZGVsIG1lcmNhZG8gZGUgY2VyZWFsZXMsIGluZGljYSBxdWUgbcOhcyBkZSBsYSB0ZXJjZXJhIHBhcnRlIHNvbiBtYW51ZmFjdHVyYWRvcyBwb3IgS2VsbG9nZ3MuIFV0aWxpemFuZG8gbGEgaW5mb3JtYWNpw7NuIGRlIGxhIG11ZXN0cmEgZ2VuZXJhZGEgZW4gZWwgw610ZW0gNCBwcnVlYmUgZXN0YSBhZmlybWFjacOzbiBhIHVuIG5pdmVsIGRlIHNpZ25pZmljYWNpYSBkZSAwLDA1Lg0KDQpBbnRlcyBkZSByZWFsaXphciBsYSBwcnVlYmEgZGUgaGlww7N0ZXNpcywgZXMgbmVjZXNhcmlvIGNhbGN1bGFyIGVsIGVzdGFkw61zdGljbyBtdWVzdHJhbCBkZSBwcm9wb3JjacOzbiwgeWEgcXVlIGVzdGUgdmFsb3Igc2Vyw6EgdXRpbGl6YWRvIHBhcmEgY29udHJhc3RhciBsYSBhZmlybWFjacOzbiBwbGFudGVhZGEuIERpY2hvIGPDoWxjdWxvIHNlIHJlYWxpemFyw6EgYSBwYXJ0aXIgZGUgbGEgbXVlc3RyYSBhbGVhdG9yaWEgc2ltcGxlIGRlIHRhbWHDsW8gNTAsIHNlbGVjY2lvbmFkYSBwcmV2aWFtZW50ZSBlbiBlbCDDrXRlbSA0LCBlbiBwYXJ0aWN1bGFyLCBzZSBpZGVudGlmaWNhcsOhIGN1w6FudG9zIGNlcmVhbGVzIGRlIGxhIG11ZXN0cmEgcGVydGVuZWNlbiBhbCBmYWJyaWNhbnRlIEtlbGxvZ2figJlzLCB5IGNvbiBlbGxvIHNlIGRldGVybWluYXLDoSBsYSBwcm9wb3JjacOzbiBtdWVzdHJhbCBkZSBkaWNobyBmYWJyaWNhbnRlLg0KDQpgYGB7cn0NCiMgMS4gQ29udGFyIGN1w6FudG9zIGNlcmVhbGVzIGRlIGxhIG11ZXN0cmEgYWxlYXRvcmlhIHNvbiBkZSBLZWxsb2dnJ3MNCmtlbGxvZ2dzX2NvdW50IDwtIHN1bShtdWVzdHJhX2FsZWF0b3JpYSRtZnIgPT0gIksiKQ0KDQojIDIuIFByb3BvcmNpw7NuIG11ZXN0cmFsDQpwX2dvcnJvIDwtIGtlbGxvZ2dzX2NvdW50IC8gbnJvdyhtdWVzdHJhX2FsZWF0b3JpYSkNCg0KIyAzLiBJbXByZXNpw7NuIGRlIHJlc3VsdGFkb3MNCmNhdCgiQ2VyZWFsZXMgZGUgS2VsbG9nZydzIGVuIGxhIG11ZXN0cmE6Iiwga2VsbG9nZ3NfY291bnQsICJcbiIpDQpjYXQoIlByb3BvcmNpw7NuIG11ZXN0cmFsIChwzIIpOiIsIHJvdW5kKHBfZ29ycm8sIDQpKQ0KYGBgDQojIyBEYXRvcyANCg0KLSAkXGhhdHtwfSA9IDB7LH0yOCQNCi0gJG4gPSA1MCQNCi0gJHBfMCA9IFxkZnJhY3sxfXszfSBcYXBwcm94IDB7LH0zMzMzJA0KDQojIyBQYXNvIDE6IEZvcm11bGFjacOzbiBkZSAkSF8wJCB5ICRIXzEkDQokJA0KSF8wOiBwIFxsZXEgXGRmcmFjezF9ezN9IFxcDQpIXzE6IHAgPiBcZGZyYWN7MX17M30NCiQkDQoNCkxhIGZvcm11bGFjacOzbiBkZSBsYXMgaGlww7N0ZXNpcyByZXNwb25kZSBhbCBvYmpldGl2byBkZWwgYW7DoWxpc2lzLCBxdWUgY29uc2lzdGUgZW4gZXZhbHVhciBzaSAqKm3DoXMgZGUgbGEgdGVyY2VyYSBwYXJ0ZSBkZSBsb3MgY2VyZWFsZXMgZGVsIG1lcmNhZG8gc29uIGZhYnJpY2Fkb3MgcG9yIEtlbGxvZ2figJlzKiouIFBvciBlc3RhIHJhesOzbiwgbGEgaGlww7N0ZXNpcyBhbHRlcm5hdGl2YSAoJEhfMSQpIHNlIHBsYW50ZWEgY29tbyAkcCA+IFxkZnJhY3sxfXszfSQsIHlhIHF1ZSBlcyBsYSBhZmlybWFjacOzbiBxdWUgc2UgZGVzZWEgdmFsaWRhci4gRGFkbyBxdWUgbGEgaGlww7N0ZXNpcyBhbHRlcm5hdGl2YSBkZWZpbmUgbGEgZGlyZWNjacOzbiBkZWwgY29udHJhc3RlLCBlc3RhIHNpdHVhY2nDs24gY29ycmVzcG9uZGUgYSB1bmEgcHJ1ZWJhIHVuaWxhdGVyYWwgZGUgY29sYSBkZXJlY2hhLiBQb3Igb3RybyBsYWRvLCBsYSBoaXDDs3Rlc2lzIG51bGEqKiAoJEhfMCQpIHJlcHJlc2VudGEgZWwgKipjb21wbGVtZW50byBsw7NnaWNvIGRlICRIXzEkLCBwb3IgbG8gcXVlIHNlIGZvcm11bGEgY29tbyAkcCBcbGVxIFxkZnJhY3sxfXszfSQuDQoNCiMjIFBhc28gMjogRGVmaW5pY2nDs24gZGUgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYQ0KJCQNClxhbHBoYSA9IDB7LH0wNQ0KJCQNCkVsIG5pdmVsIGRlIHNpZ25pZmljYW5jaWEgdXRpbGl6YWRvIGVuIGVzdGEgcHJ1ZWJhIGVzICRcYWxwaGEgPSAweyx9MDUkLCB2YWxvciBxdWUgZnVlIGVzdGFibGVjaWRvIGVuIGVsIGVudW5jaWFkbyBkZWwgZWplcmNpY2lvIHkgZWwgY3VhbCBlc3RhIGFzb2NpYWRvIGEgbGEgcHJvYmFiaWxpZGFkIG3DoXhpbWEgZGUgY29tZXRlciB1biBlcnJvciB0aXBvIEkuDQoNCiMjIFBhc28gMzogQ8OhbGN1bG8gZGUgZXN0YWTDrXN0aWNvIGRlIHBydWViYQ0KDQpgYGB7cn0NCnAwIDwtIDEvMw0KDQojIDEuIEVzdGFkw61zdGljbyBaDQp6X3AgPC0gKHBfZ29ycm8gLSBwMCkgLyBzcXJ0KHAwICogKDEgLSBwMCkgLyBuXzEpDQoNCiMgMi4gSW1wcmVzacOzbiBkZSByZXN1bHRhZG8gDQpjYXQoIkVzdGFkw61zdGljbyBkZSBwcnVlYmEgWiA9Iiwgcm91bmQoel9wLCA0KSkNCmBgYA0KJCQNClogPSBcZnJhY3tcaGF0e3B9IC0gcF8wfXtcc3FydHtcZGZyYWN7cF8wKDEgLSBwXzApfXtufX19ID0gDQpcZnJhY3sweyx9MjggLSBcZGZyYWN7MX17M319e1xzcXJ0e1xkZnJhY3tcZGZyYWN7MX17M30oMSAtIFxkZnJhY3sxfXszfSl9ezUwfX19ID0gLTB7LH04DQokJA0KRWwgdmFsb3IgY2FsY3VsYWRvIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIGVzICRaID0gLTB7LH04JC4gRXN0ZSByZXN1bHRhZG8gc2Vyw6EgY29tcGFyYWRvIGNvbiBlbCB2YWxvciBjcsOtdGljbyBjb3JyZXNwb25kaWVudGUgeSB0YW1iacOpbiBzZSB1dGlsaXphcsOhIHBhcmEgY2FsY3VsYXIgZWwgdmFsb3IgcCwgY29uIGVsIGZpbiBkZSB0b21hciB1bmEgZGVjaXNpw7NuIHNvYnJlIGxhIGhpcMOzdGVzaXMgcGxhbnRlYWRhLg0KDQojIyBQYXNvIDQ6IEZvcm11bGFjacOzbiBkZSByZWdsYSBkZSBkZWNpc2nDs24NCiMjIyBNZXTDs2RvIDEgLSBSZWdpw7NuIGNyw610aWNhDQoNClBhcmEgYXBsaWNhciBlbCBtw6l0b2RvIGRlIGxhIHJlZ2nDs24gY3LDrXRpY2EsIGVzIG5lY2VzYXJpbyBkZXRlcm1pbmFyIGVsIHZhbG9yIGNyw610aWNvIGNvcnJlc3BvbmRpZW50ZSBhbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhIGVzdGFibGVjaWRvLiBEYWRvIHF1ZSBzZSB0cmF0YSBkZSB1bmEgcHJ1ZWJhIHVuaWxhdGVyYWwgZGUgY29sYSBkZXJlY2hhLCBlbCB2YWxvciBjcsOtdGljbyAkel9cYWxwaGEkIHNlIG9idGllbmUgYSBwYXJ0aXIgZGUgbGEgZGlzdHJpYnVjacOzbiBub3JtYWwgZXN0w6FuZGFyIHkgZGVsaW1pdGEgbGEgcmVnacOzbiBjcsOtdGljYSB1YmljYWRhIGVuIGxhIGNvbGEgZGVyZWNoYSwgY3V5YSBwcm9iYWJpbGlkYWQgZXMgaWd1YWwgYSAkXGFscGhhID0gMHssfTA1JC4gIA0KQ3VhbHF1aWVyIHZhbG9yIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIG1heW9yIGEgJHpfXGFscGhhJCBzZSB1YmljYXLDoSBkZW50cm8gZGUgZXN0YSByZWdpw7NuLCBsbyBjdWFsIGltcGxpY2Fyw61hIGVsIHJlY2hhem8gZGUgbGEgaGlww7N0ZXNpcyBudWxhLg0KDQpgYGB7cn0NCiMgMS4gTml2ZWwgZGUgc2lnbmlmaWNhbmNpYQ0KYWxwaGFfMiA8LSAwLjA1DQoNCiMgMi4gQ8OhbGN1bG8gZGVsIHZhbG9yIGNyw610aWNvIHogcGFyYSB1bmEgY29sYSBpenF1aWVyZGENCnpfY3JpdGljb18yIDwtIHFub3JtKDEgLSBhbHBoYV8yKQ0KDQojIDMuIE1vc3RyYXIgZWwgcmVzdWx0YWRvDQpjYXQoIlZhbG9yIGNyw610aWNvICh6WzAuMDVdKSA9Iiwgcm91bmQoel9jcml0aWNvXzIsIDQpKQ0KYGBgDQpgYGB7cixlY2hvPUZBTFNFfQ0KeF92YWxzIDwtIHNlcSgtNCwgNCwgbGVuZ3RoLm91dCA9IDEwMDApDQpkZW5zaWRhZCA8LSBkbm9ybSh4X3ZhbHMpDQpkZiA8LSBkYXRhLmZyYW1lKHggPSB4X3ZhbHMsIHkgPSBkZW5zaWRhZCkNCg0KZ2dwbG90KGRmLCBhZXMoeCwgeSkpICsNCiAgZ2VvbV9saW5lKGNvbG9yID0gImJsYWNrIiwgbGluZXdpZHRoID0gMSkgKw0KICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLCBjb2xvciA9ICJibGFjayIsIGxpbmV3aWR0aCA9IDAuOCkgKw0KICANCiAgZ2VvbV9hcmVhKGRhdGEgPSBzdWJzZXQoZGYsIHggPj0gel9jcml0aWNvXzIpLCBhZXMoeCwgeSksIGZpbGwgPSAicmVkIiwgYWxwaGEgPSAwLjQpICsNCiAgDQogIGdlb21fc2VnbWVudChhZXMoeCA9IHpfY3JpdGljb18yLCB4ZW5kID0gel9jcml0aWNvXzIsIHkgPSAwLCB5ZW5kID0gZG5vcm0oel9jcml0aWNvXzIpKSwNCiAgICAgICAgICAgICAgIGNvbG9yID0gInJlZCIsIGxpbmV0eXBlID0gImRhc2hlZCIsIGxpbmV3aWR0aCA9IDEuMikgKw0KICBnZW9tX3NlZ21lbnQoYWVzKHggPSB6X3AsIHhlbmQgPSB6X3AsIHkgPSAwLCB5ZW5kID0gZG5vcm0oel9wKSksDQogICAgICAgICAgICAgICBjb2xvciA9ICJibHVlIiwgbGluZXR5cGUgPSAiZG90dGVkIiwgbGluZXdpZHRoID0gMS4yKSArDQoNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gel9jcml0aWNvXzIgKyAwLjIsIHkgPSBkbm9ybSh6X2NyaXRpY29fMikgKyAwLjAzLCANCiAgICAgICAgICAgbGFiZWwgPSBwYXN0ZTAoInpcdTAzQjEgPSAiLCByb3VuZCh6X2NyaXRpY29fMiwgNCkpLCBjb2xvciA9ICJyZWQiLCBzaXplID0gNCkgKw0KICANCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gel9wIC0gMC4yLCB5ID0gZG5vcm0oel9wKSArIDAuMDQsIA0KICAgICAgICAgICBsYWJlbCA9IHBhc3RlMCgiWiA9ICIsIHJvdW5kKHpfcCwgNCkpLCBjb2xvciA9ICJibHVlIiwgc2l6ZSA9IDQpICsNCiAgDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IC0wLjEsIHkgPSAwLjEsIGxhYmVsID0gIlJlZ2nDs24gZGVcbm5vIHJlY2hhem8iLCBjb2xvciA9ICJkYXJrZ3JlZW4iLCBzaXplID0gNSkgKw0KICBhbm5vdGF0ZSgidGV4dCIsIHggPSAzLCB5ID0gMC4wOCwgbGFiZWwgPSAiUmVnacOzbiBkZSByZWNoYXpvIiwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDUpICsNCg0KICBzY2FsZV94X2NvbnRpbnVvdXMobGltaXRzID0gYygtNCwgNCksIGJyZWFrcyA9IHNlcSgtNCwgNCwgYnkgPSAxKSkgKw0KICBsYWJzKA0KICAgIHRpdGxlID0gIkRpc3RyaWJ1Y2nDs24gTm9ybWFsIEVzdMOhbmRhciIsDQogICAgc3VidGl0bGUgPSAiUmVnacOzbiBjcsOtdGljYSAozrEgPSAwLjA1KSB5IHZhbG9yIFogZGUgcHJ1ZWJhIiwNCiAgICB4ID0gIloiLA0KICAgIHkgPSAiRGVuc2lkYWQiDQogICkgKw0KICB0aGVtZV9taW5pbWFsKGJhc2Vfc2l6ZSA9IDE0KQ0KDQpgYGANCg0KIyMjIE1ldMOzZG8gMiAtIFZhbG9yX3ANCg0KRGFkbyBxdWUgc2UgdHJhdGEgZGUgdW5hICoqcHJ1ZWJhIHVuaWxhdGVyYWwgZGUgY29sYSBkZXJlY2hhKiosIGVsIHZhbG9yIHAgc2UgY2FsY3VsYSBjb21vIGxhIHByb2JhYmlsaWRhZCBkZSBxdWUgdW5hIHZhcmlhYmxlIGFsZWF0b3JpYSBub3JtYWwgZXN0w6FuZGFyIHRvbWUgdW4gdmFsb3IgKiptYXlvcioqIGFsIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgb2J0ZW5pZG86DQoNCiQkDQpQKFogPiAtMHssfTgpDQokJA0KDQpgYGB7cn0NCiMgMS4gQ8OhbGN1bG8gZGVsIHZhbG9yIHAgKHBydWViYSB1bmlsYXRlcmFsIGRlcmVjaGEpDQp2YWxvcl9wMiA8LSBwbm9ybSh6X3AsIGxvd2VyLnRhaWwgPSBGQUxTRSkNCg0KIyAyLiBNb3N0cmFyIHJlc3VsdGFkbw0KY2F0KCJWYWxvciBwID0iLCByb3VuZCh2YWxvcl9wMiwgNCkpDQpgYGANCg0KIyMgUGFzbyA1OiBUb21hIGRlIGRlY2lzacOzbiBjb24gcmVzcGVjdG8gYSBsYXMgaGlww7N0ZXNpcyANCg0KIyMjIE1ldMOzZG8gMSAtIFJlZ2nDs24gY3LDrXRpY2ENCg0KRWwgdmFsb3IgY2FsY3VsYWRvIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIGZ1ZSAkWiA9IC0weyx9OCQsIGVsIGN1YWwgc2UgZW5jdWVudHJhIGEgbGEgaXpxdWllcmRhIGRlbCB2YWxvciBjcsOtdGljbyAkel9cYWxwaGEgPSAxeyx9NjQ0OSQsIGRhZG8gcXVlIHNlIHRyYXRhIGRlIHVuYSBwcnVlYmEgdW5pbGF0ZXJhbCBkZSBjb2xhIGRlcmVjaGEsIHNvbG8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEgY3VhbmRvIGVsIGVzdGFkw61zdGljbyBzZSB1YmljYSBlbiBsYSByZWdpw7NuIGNyw610aWNhLCBlcyBkZWNpciwgYSBsYSBkZXJlY2hhIGRlICR6X1xhbHBoYSQsIGVuIGVzdGUgY2FzbywgY29tbyAkWiA9IC0weyx9OCQgKipubyBjYWUgZGVudHJvIGRlIGxhIHJlZ2nDs24gY3LDrXRpY2EqKiwgc2UgY29uY2x1eWUgcXVlICoqbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEqKi4gDQoNCiMjIyBNZXTDs2RvIDIgLSBWYWxvcl9wDQoNCiQkDQpwID0gMHssfTc4ODE+IFxhbHBoYSA9IDB7LH0wNQ0KJCQNCkRhZG8gcXVlIGVsIHZhbG9yIHAgcmVzdWx0YSBzZXIgKiptYXlvcioqIHF1ZSBlbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhIGVzdGFibGVjaWRvLCBubyBzZSBjdWVudGEgY29uIHN1ZmljaWVudGUgZXZpZGVuY2lhIGVzdGFkw61zdGljYSBwYXJhIHJlY2hhemFyIGxhIGhpcMOzdGVzaXMgbnVsYS4gDQoNCiMjIFBhc28gNjogQ29uY2x1c2nDs24NCg0KVGFudG8gZWwgbcOpdG9kbyBkZSBsYSByZWdpw7NuIGNyw610aWNhIGNvbW8gZWwgZGVsIHZhbG9yIHAgY29uZHVjZW4gYSBsYSBtaXNtYSBkZWNpc2nDs24gZXN0YWTDrXN0aWNhOiAqKm5vIHNlIHJlY2hhemEgbGEgaGlww7N0ZXNpcyBudWxhKiogYWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBkZWwgNSUuICBFbCB2YWxvciBkZWwgZXN0YWTDrXN0aWNvIGRlIHBydWViYSBmdWUgJFogPSAtMHssfTgkLCBlbCBjdWFsIG5vIHNlIGVuY3VlbnRyYSBkZW50cm8gZGUgbGEgcmVnacOzbiBjcsOtdGljYSBkZWxpbWl0YWRhIHBvciAkel9cYWxwaGEgPSAxeyx9NjQ0OSQuICBBZGVtw6FzLCBlbCB2YWxvciBwIG9idGVuaWRvIGZ1ZSAkcCA9IDB7LH03ODgxJCwgY2xhcmFtZW50ZSBtYXlvciBxdWUgJFxhbHBoYSA9IDB7LH0wNSQsIGxvIHF1ZSByZXNwYWxkYSBsYSBtaXNtYSBjb25jbHVzacOzbi4gUG9yIHRhbnRvLCAqKm5vIHNlIGN1ZW50YSBjb24gZXZpZGVuY2lhIGVzdGFkw61zdGljYW1lbnRlIHNpZ25pZmljYXRpdmEqKiBwYXJhIGFmaXJtYXIgcXVlICoqbcOhcyBkZSBsYSB0ZXJjZXJhIHBhcnRlIGRlIGxvcyBjZXJlYWxlcyBkZWwgbWVyY2FkbyBzb24gZmFicmljYWRvcyBwb3IgS2VsbG9nZ+KAmXMqKi4gRXN0ZSByZXN1bHRhZG8gZXMgaW50ZXJlc2FudGUgc2kgc2UgY29uc2lkZXJhIHF1ZSwgYWwgY2FsY3VsYXIgbGEgcHJvcG9yY2nDs24gcG9ibGFjaW9uYWwgYSBwYXJ0aXIgZGUgdG9kYSBsYSBiYXNlIGRlIGRhdG9zLCBLZWxsb2dn4oCZcyByZXByZXNlbnRhIGFwcm94aW1hZGFtZW50ZSBlbCAkMzBcJSQgZGVsIHRvdGFsIGRlIGNlcmVhbGVzIHByb2R1Y2lkb3MsIHVuYSBjaWZyYSBjZXJjYW5hIHBlcm8gaW5zdWZpY2llbnRlIHBhcmEgcmVzcGFsZGFyIGVzdGFkw61zdGljYW1lbnRlIGxhIGFmaXJtYWNpw7NuIGluaWNpYWwuDQoNCiMgNy4gTXVlc3RyYSBkZSB0YW1hw7FvIDQwDQpgYGB7cn0NCiMgMS4gRGVmaW5pY2nDs24gZGUgbGEgc2VtaWxsYSBwYXJhIGFzZWd1cmFyIGxhIHJlcHJvZHVjaWJpbGlkYWQgZGVsIG11ZXN0cmVvDQpzZXQuc2VlZCgxMjMpDQoNCiMgMi4gU2UgYXNpZ25hIHVuIElEIMO6bmljbyBhIGNhZGEgY2VyZWFsIHBhcmEgZmFjaWxpdGFyIHN1IGlkZW50aWZpY2FjacOzbiBwb3N0ZXJpb3INCmNlcmVhbDEkSURfT3JpZ2luYWwgPC0gMTpucm93KGNlcmVhbDEpDQoNCiMgMy4gRGVmaW5pY2nDs24gZGVsIHRhbWHDsW8gZGUgbGEgbXVlc3RyYQ0Kbl8yIDwtIDQwICANCg0KIyA0LiBTZWxlY2Npw7NuIGRlIGxhIG11ZXN0cmEgYWxlYXRvcmlhIHNpbXBsZSBTSU4gcmVlbXBsYXpvDQptdWVzdHJlb19hbGVhdG9yaW8yIDwtIHNhbXBsZSgxOm5yb3coY2VyZWFsMSksIHNpemUgPSBuXzIsIHJlcGxhY2UgPSBGQUxTRSkNCg0KIyA1LiBDcmVhY2nDs24gZGVsIHN1YmNvbmp1bnRvIGRlIGRhdG9zIGNvbiBsb3MgY2VyZWFsZXMgc2VsZWNjaW9uYWRvcw0KbXVlc3RyYV9hbGVhdG9yaWEyIDwtIGNlcmVhbDFbbXVlc3RyZW9fYWxlYXRvcmlvMiwgXQ0KDQojIDYuIFRhYmxhIHF1ZSBwcmVzZW50YSBsb3MgZGF0b3MgZGUgbGEgbXVlc3RyYSBzZWxlY2Npb25hZGENCmRhdGF0YWJsZSgNCiAgbXVlc3RyYV9hbGVhdG9yaWEyWywgYygiSURfT3JpZ2luYWwiLCBuYW1lcyhjZXJlYWwxKVtuYW1lcyhjZXJlYWwxKSAhPSAiSURfT3JpZ2luYWwiXSldLCANCiAgb3B0aW9ucyA9IGxpc3QoDQogICAgcGFnZUxlbmd0aCA9IDEwLA0KICAgIGF1dG9XaWR0aCA9IFRSVUUsDQogICAgc2VhcmNoaW5nID0gVFJVRSwNCiAgICBzY3JvbGxYID0gVFJVRSwNCiAgICBsZW5ndGhNZW51ID0gbGlzdChjKDEwLCAyMCwgNTAsIC0xKSwgYygiMTAiLCAiMjAiLCAiNTAiLCAiVG9kb3MiKSkNCiAgKSwNCiAgY2FwdGlvbiA9ICJNdWVzdHJhIEFsZWF0b3JpYSBkZSBDZXJlYWxlcyIsDQogIHJvd25hbWVzID0gRkFMU0UNCikNCmBgYA0KIyA4LiBTdXBvbmdhIHF1ZSBsYSBtdWVzdHJhIGdlbmVyYWRhIGVuIGVsIMOtdGVtIDQgeSBlbiBlbCDDrXRlbSBhbnRlcmlvciBzb24gaW5kZXBlbmRpZW50ZXMuIFV0aWxpemFuZG8gZXN0YXMgZG9zIG11ZXN0cmFzLCBkZXNhcnJvbGxlIHVuIHBydWViYSBwYXJhIGRldGVybWluYXIgc2kgbGFzIHZhcmlhbnphcyBkZWwgc29kaW8gc29uIGlndWFsZXMgbyBkaWZlcmVudGVzLlV0aWxpY2UgdW4gbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBkZWwgMCwwNS4gDQoNClBhcmEgZGV0ZXJtaW5hciBzaSBsYXMgdmFyaWFuemFzIGRlbCBjb250ZW5pZG8gZGUgc29kaW8gc29uIGlndWFsZXMgbyBkaWZlcmVudGVzLCBzZSB1dGlsaXphcsOhbiBkb3MgbXVlc3RyYXMgaW5kZXBlbmRpZW50ZXMgdG9tYWRhcyBkZSBsYSBiYXNlIGRlIGRhdG9zLiBFc3RhcyBtdWVzdHJhcyBubyBjb21wYXJ0ZW4gb2JzZXJ2YWNpb25lcyBlbnRyZSBzw60sIGxvIHF1ZSBwZXJtaXRlIGFwbGljYXIgdW5hIHBydWViYSBGLCBxdWUgY29tcGFyYSBsYSB2YXJpYWJpbGlkYWQgZW50cmUgYW1ib3MgZ3J1cG9zLiBBbnRlcyBkZSByZWFsaXphciBsYSBwcnVlYmEsIHNlIGNhbGN1bGFyw6FuIGxhcyB2YXJpYW56YXMgbXVlc3RyYWxlcyBkZSBjYWRhIG11ZXN0cmE6DQoNCmBgYHtyfQ0KIyAxLiBDw6FsY3VsbyBkZSBsYXMgdmFyaWFuemFzIG11ZXN0cmFsZXMgZGVsIHNvZGlvDQp2YXJpYW56YV8xIDwtIHZhcihtdWVzdHJhX2FsZWF0b3JpYSRzb2RpdW0pDQp2YXJpYW56YV8yIDwtIHZhcihtdWVzdHJhX2FsZWF0b3JpYTIkc29kaXVtKQ0KDQojIDIuIEltcHJpbWlyIHJlc3VsdGFkb3MNCmNhdCgiVmFyaWFuemEgbXVlc3RyYWwgZ3J1cG8gMToiLCByb3VuZCh2YXJpYW56YV8xLCAyKSwgIlxuIikNCmNhdCgiVmFyaWFuemEgbXVlc3RyYWwgZ3J1cG8gMjoiLCByb3VuZCh2YXJpYW56YV8yLCAyKSkNCmBgYA0KIyMgRGF0b3MgDQpgYGB7cixlY2hvPUZBTFNFfQ0KdGFibGFfdmFyaWFuemFzIDwtIGRhdGEuZnJhbWUoDQogIEdydXBvID0gYygiTXVlc3RyYSAxIiwgIk11ZXN0cmEgMiIpLA0KICBuID0gYyg1MCwgNDApLA0KICBzMiA9IGMoNjkwNy40LCA2ODUyLjgyKQ0KKQ0KDQojIEdlbmVyYXIgbGEgdGFibGEgY29uIGZvcm1hdG8gSFRNTA0KdGFibGFfdmFyaWFuemFzICU+JQ0KICBrYWJsZSgNCiAgICBmb3JtYXQgPSAiaHRtbCIsDQogICAgY29sLm5hbWVzID0gYygiR3J1cG8iLCAibiIsICJzPHN1cD4yPC9zdXA+IiksDQogICAgY2FwdGlvbiA9ICJUYWJsYSBkZSBWYXJpYW56YXMgcG9yIEdydXBvIiwNCiAgICBhbGlnbiA9ICJjIiwNCiAgICBlc2NhcGUgPSBGQUxTRQ0KICApICU+JQ0KICBrYWJsZV9zdHlsaW5nKA0KICAgIGZ1bGxfd2lkdGggPSBGQUxTRSwNCiAgICBmb250X3NpemUgPSAxNiwNCiAgICBib290c3RyYXBfb3B0aW9ucyA9IGMoInN0cmlwZWQiLCAiaG92ZXIiLCAiY29uZGVuc2VkIiwgImJvcmRlcmVkIiksDQogICAgcG9zaXRpb24gPSAiY2VudGVyIg0KICApICU+JQ0KICByb3dfc3BlYygwLCBib2xkID0gVFJVRSwgYmFja2dyb3VuZCA9ICIjRDlEOUQ5IikgJT4lDQogIGNvbHVtbl9zcGVjKDEsIGJvcmRlcl9sZWZ0ID0gVFJVRSwgYm9yZGVyX3JpZ2h0ID0gVFJVRSkgJT4lDQogIGNvbHVtbl9zcGVjKDIsIGJvcmRlcl9sZWZ0ID0gVFJVRSwgYm9yZGVyX3JpZ2h0ID0gVFJVRSkgJT4lDQogIGNvbHVtbl9zcGVjKDMsIGJvcmRlcl9sZWZ0ID0gVFJVRSwgYm9yZGVyX3JpZ2h0ID0gVFJVRSkgJT4lDQogIGthYmxlX2NsYXNzaWMoaHRtbF9mb250ID0gIkNhbWJyaWEiKQ0KYGBgDQoNCiMjIFBhc28gMTogRm9ybXVsYWNpw7NuIGRlICRIXzAkIHkgJEhfMSQNCg0KJCQNCkhfMDogXHNpZ21hXzFeMiA9IFxzaWdtYV8yXjIgXFwNCkhfMTogXHNpZ21hXzFeMiBcbmUgXHNpZ21hXzJeMg0KJCQNCkRhZG8gcXVlIGVsIG9iamV0aXZvIGRlbCBlamVyY2ljaW8gZXMgZGV0ZXJtaW5hciBzaSBsYXMgdmFyaWFuemFzIGRlbCBjb250ZW5pZG8gZGUgc29kaW8gc29uIGlndWFsZXMgbyBkaWZlcmVudGVzLCBzZSBwbGFudGVhIHVuYSBwcnVlYmEgYmlsYXRlcmFsIHBhcmEgY29tcGFyYXIgbGFzIHZhcmlhbnphcy4gUG9yIGVzdGEgcmF6w7NuLCBsYSBoaXDDs3Rlc2lzIG51bGEgc2UgZm9ybXVsYSBjb21vIFwoIEhfMDogXHNpZ21hXzFeMiA9IFxzaWdtYV8yXjIgXCksIGxvIGN1YWwgc3Vwb25lIHF1ZSBhbWJhcyBtdWVzdHJhcyBwcm92aWVuZW4gZGUgcG9ibGFjaW9uZXMgY29uIGlndWFsIHZhcmlhYmlsaWRhZC4gUG9yIG90cm8gbGFkbywgbGEgaGlww7N0ZXNpcyBhbHRlcm5hdGl2YSBcKCBIXzE6IFxzaWdtYV8xXjIgXG5lIFxzaWdtYV8yXjIgXCkgcmVwcmVzZW50YSBlbCBjYXNvIGNvbnRyYXJpbywgZXMgZGVjaXIsIHF1ZSBleGlzdGUgdW5hIGRpZmVyZW5jaWEgZW4gbGEgZGlzcGVyc2nDs24gZGVsIHNvZGlvIGVudHJlIGxvcyBkb3MgZ3J1cG9zLg0KDQojIyBQYXNvIDI6IERlZmluaWNpw7NuIGRlIG5pdmVsIGRlIHNpZ25pZmljYW5jaWENCiQkDQpcYWxwaGEgPSAweyx9MDUNCiQkDQpFbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhIHV0aWxpemFkbyBlcyBcKCBcYWxwaGEgPSAweyx9MDUgXCksIHRhbCBjb21vIGxvIGluZGljYSBlbCBlbnVuY2lhZG8gZGVsIGVqZXJjaWNpby4gRXN0byBzaWduaWZpY2EgcXVlIHNlIGFjZXB0YSBoYXN0YSB1biA1JSBkZSBwcm9iYWJpbGlkYWQgZGUgY29tZXRlciB1biBlcnJvciBhbCByZWNoYXphciBsYSBoaXDDs3Rlc2lzIG51bGEgc2kgZW4gcmVhbGlkYWQgZXMgdmVyZGFkZXJhLg0KDQojIyBQYXNvIDM6IEPDoWxjdWxvIGRlIGVzdGFkw61zdGljbyBkZSBwcnVlYmENCmBgYHtyfQ0KIyAxLiBDw6FjdWxvIGRlIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgDQpGX3BydWViYSA8LSB2YXJpYW56YV8xIC8gdmFyaWFuemFfMg0KDQpnbDEgPC0gbl8xIC0gMQ0KZ2wyIDwtIG5fMiAtIDENCg0KIyBNb3N0cmFyIHJlc3VsdGFkbw0KY2F0KCJFc3RhZMOtc3RpY28gRiA9Iiwgcm91bmQoRl9wcnVlYmEsIDQpLCAiIGNvbiBnbDEgPSIsIGdsMSwgInkgZ2wyID0iLCBnbDIpDQoNCmBgYA0KJCQNCkYgPSBcZnJhY3tzXzFeMn17c18yXjJ9ID0gXGZyYWN7NjkwN3ssfTQwfXs2ODUyeyx9ODJ9ID0gMXssfTAwOCBccXVhZCBcdGV4dHtjb24gfSBnbF8xID0gNDkgXHRleHR7IHkgfSBnbF8yID0gMzkNCiQkDQoNCkVsIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgb2J0ZW5pZG8gZXMgXCggRiA9IDF7LH0wMDggXCksIGNhbGN1bGFkbyBjb24gXCggZ2xfMSA9IDQ5IFwpIHkgXCggZ2xfMiA9IDM5IFwpLiBFc3RlIHZhbG9yIHJlcHJlc2VudGEgbGEgcmF6w7NuIGVudHJlIGxhcyB2YXJpYW56YXMgbXVlc3RyYWxlcywgeSBzZXLDoSBjb21wYXJhZG8gY29uIGxvcyB2YWxvcmVzIGNyw610aWNvcyBkZSBsYSBkaXN0cmlidWNpw7NuIEYgcGFyYSBkZXRlcm1pbmFyIHNpIGV4aXN0ZSB1bmEgZGlmZXJlbmNpYSBzaWduaWZpY2F0aXZhIGVuIGxhIHZhcmlhYmlsaWRhZCBkZWwgY29udGVuaWRvIGRlIHNvZGlvIGVudHJlIGFtYmFzIG11ZXN0cmFzLg0KDQojIyBQYXNvIDQ6IEZvcm11bGFjacOzbiBkZSByZWdsYSBkZSBkZWNpc2nDs24NCg0KIyMjIE1ldMOzZG8gMSAtIFJlZ2nDs24gY3LDrXRpY2ENCg0KUGFyYSBhcGxpY2FyIGVsIG3DqXRvZG8gZGUgbGEgcmVnacOzbiBjcsOtdGljYSwgZXMgbmVjZXNhcmlvIGNhbGN1bGFyIGxvcyAqKnZhbG9yZXMgY3LDrXRpY29zKiogZGUgbGEgZGlzdHJpYnVjacOzbiBGLCBkYWRvIHF1ZSBzZSB0cmF0YSBkZSB1bmEgKipwcnVlYmEgYmlsYXRlcmFsKiosIGVsIG5pdmVsIGRlIHNpZ25pZmljYW5jaWEgXCggXGFscGhhID0gMHssfTA1IFwpIHNlIHJlcGFydGUgZW4gZG9zIGNvbGFzLCBhc2lnbmFuZG8gXCggXGFscGhhLzIgPSAweyx9MDI1IFwpIGEgY2FkYSBleHRyZW1vIGRlIGxhIGRpc3RyaWJ1Y2nDs24sIGNvbiBsb3MgZ3JhZG9zIGRlIGxpYmVydGFkIGNvcnJlc3BvbmRpZW50ZXMgYSBjYWRhIG11ZXN0cmEgKFwoIGdsXzEgPSA0OSBcKSB5IFwoIGdsXzIgPSAzOSBcKSksIHNlIGRldGVybWluYXLDoW4gbG9zIHB1bnRvcyBkZSBjb3J0ZSBxdWUgZGVsaW1pdGFuIGxhIHJlZ2nDs24gZGUgcmVjaGF6by4NCg0KYGBge3J9DQojIFZhbG9yZXMgY3LDrXRpY29zDQpGX3N1cCA8LSBxZigxIC0gYWxwaGEvMiwgZGYxID0gZ2wxLCBkZjIgPSBnbDIpDQpGX2luZiA8LSAxIC8gcWYoMSAtIGFscGhhLzIsIGRmMSA9IGdsMiwgZGYyID0gZ2wxKQ0KDQojIE1vc3RyYXIgcmVzdWx0YWRvcw0KY2F0KCJWYWxvciBjcsOtdGljbyBpbmZlcmlvciA9Iiwgcm91bmQoRl9pbmYsIDQpLCAiXG4iKQ0KY2F0KCJWYWxvciBjcsOtdGljbyBzdXBlcmlvciA9Iiwgcm91bmQoRl9zdXAsIDQpKQ0KYGBgDQoNCmBgYHtyLGVjaG89RkFMU0V9DQp4X3ZhbHMgPC0gc2VxKDAuMiwgNC41LCBsZW5ndGgub3V0ID0gMTAwMCkNCmRlbnNpZGFkIDwtIGRmKHhfdmFscywgZGYxID0gZ2wxLCBkZjIgPSBnbDIpDQpkZiA8LSBkYXRhLmZyYW1lKHggPSB4X3ZhbHMsIHkgPSBkZW5zaWRhZCkNCg0KRl9wcnVlYmEgPC0gMS4wMDgNCg0KZ2dwbG90KGRmLCBhZXMoeCwgeSkpICsNCiAgZ2VvbV9saW5lKGNvbG9yID0gImJsYWNrIiwgbGluZXdpZHRoID0gMSkgKw0KICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLCBjb2xvciA9ICJibGFjayIsIGxpbmV3aWR0aCA9IDAuOCkgKw0KICANCiAgZ2VvbV9hcmVhKGRhdGEgPSBzdWJzZXQoZGYsIHggPD0gRl9pbmYpLCBhZXMoeCwgeSksIGZpbGwgPSAicmVkIiwgYWxwaGEgPSAwLjQpICsNCiAgZ2VvbV9hcmVhKGRhdGEgPSBzdWJzZXQoZGYsIHggPj0gRl9zdXApLCBhZXMoeCwgeSksIGZpbGwgPSAicmVkIiwgYWxwaGEgPSAwLjQpICsNCiAgDQogIGdlb21fc2VnbWVudChhZXMoeCA9IEZfaW5mLCB4ZW5kID0gRl9pbmYsIHkgPSAwLCB5ZW5kID0gZGYoRl9pbmYsIGdsMSwgZ2wyKSksIA0KICAgICAgICAgICAgICAgY29sb3IgPSAicmVkIiwgbGluZXR5cGUgPSAiZGFzaGVkIiwgbGluZXdpZHRoID0gMS4yKSArDQogIGdlb21fc2VnbWVudChhZXMoeCA9IEZfc3VwLCB4ZW5kID0gRl9zdXAsIHkgPSAwLCB5ZW5kID0gZGYoRl9zdXAsIGdsMSwgZ2wyKSksIA0KICAgICAgICAgICAgICAgY29sb3IgPSAicmVkIiwgbGluZXR5cGUgPSAiZGFzaGVkIiwgbGluZXdpZHRoID0gMS4yKSArDQogIGdlb21fc2VnbWVudChhZXMoeCA9IEZfcHJ1ZWJhLCB4ZW5kID0gRl9wcnVlYmEsIHkgPSAwLCB5ZW5kID0gZGYoRl9wcnVlYmEsIGdsMSwgZ2wyKSksIA0KICAgICAgICAgICAgICAgY29sb3IgPSAiYmx1ZSIsIGxpbmV0eXBlID0gImRvdHRlZCIsIGxpbmV3aWR0aCA9IDEuMikgKw0KICANCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gRl9pbmYgLSAwLjEsIHkgPSBkZihGX2luZiwgZ2wxLCBnbDIpICsgMC4wNSwNCiAgICAgICAgICAgbGFiZWwgPSBwYXN0ZTAoIkYgaW5mID0gIiwgcm91bmQoRl9pbmYsIDMpKSwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDQpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gRl9zdXAgKyAwLjQsIHkgPSBkZihGX3N1cCwgZ2wxLCBnbDIpICsgMC4wOCwNCiAgICAgICAgICAgbGFiZWwgPSBwYXN0ZTAoIkYgc3VwID0gIiwgcm91bmQoRl9zdXAsIDMpKSwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDQpICsNCiAgYW5ub3RhdGUoInRleHQiLCANCiAgICAgICAgIHggPSBGX3BydWViYSArIDAuMywgDQogICAgICAgICB5ID0gZGYoRl9wcnVlYmEsIGdsMSwgZ2wyKSArIDAuMDQsDQogICAgICAgICBsYWJlbCA9IHBhc3RlMCgiRiA9ICIsIHJvdW5kKEZfcHJ1ZWJhLCAzKSksIA0KICAgICAgICAgY29sb3IgPSAiYmx1ZSIsIHNpemUgPSA0KSArDQogIA0KICBhbm5vdGF0ZSgidGV4dCIsIHggPSAwLjYsIHkgPSAwLjEsIGxhYmVsID0gIlJlZ2nDs24gZGUgcmVjaGF6byIsIGNvbG9yID0gInJlZCIsIHNpemUgPSA0KSArDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IDMuMywgeSA9IDAuMDgsIGxhYmVsID0gIlJlZ2nDs24gZGUgcmVjaGF6byIsIGNvbG9yID0gInJlZCIsIHNpemUgPSA0KSArDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IDEsIHkgPSAwLjYsIGxhYmVsID0gIlJlZ2nDs24gZGVcbm5vIHJlY2hhem8iLCBjb2xvciA9ICJkYXJrZ3JlZW4iLCBzaXplID0gNSkgKw0KDQogIHNjYWxlX3hfY29udGludW91cygNCiAgICBsaW1pdHMgPSBjKDAuMiwgNC41KSwNCiAgICBicmVha3MgPSBzZXEoMC41LCA0LjUsIGJ5ID0gMC41KQ0KICApICsNCiAgDQogIGxhYnMoDQogICAgdGl0bGUgPSAiRGlzdHJpYnVjacOzbiBGIiwNCiAgICBzdWJ0aXRsZSA9ICJSZWdpw7NuIGNyw610aWNhIGJpbGF0ZXJhbCAozrEgPSAwLjA1KSB5IHZhbG9yIEYgZGUgcHJ1ZWJhIiwNCiAgICB4ID0gIkYiLA0KICAgIHkgPSAiRGVuc2lkYWQiDQogICkgKw0KICB0aGVtZV9taW5pbWFsKGJhc2Vfc2l6ZSA9IDE0KQ0KDQoNCmBgYA0KDQojIyMgTWV0w7NkbyAyIC0gVmFsb3JfcA0KDQpEYWRvIHF1ZSBzZSB0cmF0YSBkZSB1bmEgcHJ1ZWJhIGJpbGF0ZXJhbCwgZWwgdmFsb3IgcCBzZSBjYWxjdWxhIGNvbW8gbGEgcHJvYmFiaWxpZGFkIGRlIG9idGVuZXIgdW4gdmFsb3IgZGVsIGVzdGFkw61zdGljbyBGIGlndWFsIG8gbcOhcyBleHRyZW1vIHF1ZSBlbCBvYnNlcnZhZG8sIGNvbnNpZGVyYW5kbyB0YW50byBsYSBjb2xhIGl6cXVpZXJkYSBjb21vIGxhIGNvbGEgZGVyZWNoYSBkZSBsYSBkaXN0cmlidWNpw7NuLg0KDQpgYGB7cn0NCiMgMS4gQ8OhbGN1bG8gZGVsIHZhbG9yIHAgKHBydWViYSBiaWxhdGVyYWwpDQp2YWxvcl9wMyA8LSAyICogcGYoRl9wcnVlYmEsIGdsMSwgZ2wyLCBsb3dlci50YWlsID0gRkFMU0UpDQoNCiMgMi4gTW9zdHJhciByZXN1bHRhZG8NCmNhdCgiVmFsb3IgcCA9Iiwgcm91bmQodmFsb3JfcDMsIDQpKQ0KDQpgYGANCg0KIyMgUGFzbyA1OiBUb21hIGRlIGRlY2lzacOzbiBjb24gcmVzcGVjdG8gYSBsYXMgaGlww7N0ZXNpcyANCg0KIyMjIE1ldMOzZG8gMSAtIFJlZ2nDs24gY3LDrXRpY2ENCg0KRWwgdmFsb3IgY2FsY3VsYWRvIGRlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIGZ1ZSAkRiA9IDF7LH0wMDgkLiBEYWRvIHF1ZSBzZSB0cmF0YSBkZSB1bmEgKipwcnVlYmEgYmlsYXRlcmFsKiosIHNlIGRlYmVuIGNvbnNpZGVyYXIgbG9zIHZhbG9yZXMgY3LDrXRpY29zIGNvcnJlc3BvbmRpZW50ZXMgYWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSAkXGFscGhhID0gMHssfTA1JC4gRW4gZXN0ZSBjYXNvLCBsb3MgdmFsb3JlcyBjcsOtdGljb3Mgc29uICRGX3tcdGV4dHtpbmZ9fSA9IDB7LH01NTMkIHkgJEZfe1x0ZXh0e3N1cH19ID0gMXssfTg0NjMkLiBDb21vIGVsIHZhbG9yIG9ic2VydmFkbyBzZSBlbmN1ZW50cmEgZW50cmUgYW1ib3MgbMOtbWl0ZXMgY3LDrXRpY29zLCBlcyBkZWNpciwgJDB7LH01NTMgPCAxeyx9MDA4IDwgMXssfTg0NjMkLCBzZSBjb25jbHV5ZSBxdWUgKipubyBzZSByZWNoYXphIGxhIGhpcMOzdGVzaXMgbnVsYSoqLiANCg0KIyMjIE1ldMOzZG8gMiAtIFZhbG9yX3ANCg0KJCQNCnAgPSAweyx9OTg0NCA+IFxhbHBoYSA9IDB7LH0wNQ0KJCQNCkVsIHZhbG9yIGNhbGN1bGFkbyBkZWwgdmFsb3IgcCBmdWUgJHAgPSAweyx9OTg0NCQsIGVsIGN1YWwgZXMgY29uc2lkZXJhYmxlbWVudGUgbWF5b3IgcXVlIGVsIG5pdmVsIGRlIHNpZ25pZmljYW5jaWEgZXN0YWJsZWNpZG8gJFxhbHBoYSA9IDB7LH0wNSQuIERhZG8gcXVlICRwID4gXGFscGhhJCwgc2UgY29uY2x1eWUgcXVlICoqbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEqKi4NCg0KIyMgUGFzbyA2OiBDb25jbHVzacOzbg0KDQpFbiBkZWZpbml0aXZhLCBsb3MgcmVzdWx0YWRvcyBvYnRlbmlkb3MgaW5kaWNhbiBxdWUgKipubyBoYXkgc3VmaWNpZW50ZSBldmlkZW5jaWEgZXN0YWTDrXN0aWNhIHBhcmEgYWZpcm1hciBxdWUgbGFzIHZhcmlhbnphcyBkZWwgY29udGVuaWRvIGRlIHNvZGlvIGVuIGxhcyBkb3MgbXVlc3RyYXMgc2VhbiBkaWZlcmVudGVzKiouIEEgcGVzYXIgZGUgcXVlIGxvcyB2YWxvcmVzIG11ZXN0cmFsZXMgKGVzdGFkw61zdGljb3MpIHByZXNlbnRhbiBjaWVydGEgdmFyaWFiaWxpZGFkLCBlc3RhIGRpZmVyZW5jaWEgbm8gZXMgZXN0YWTDrXN0aWNhbWVudGUgc2lnbmlmaWNhdGl2YSBhbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhIGVzdGFibGVjaWRvLiBQb3IgdGFudG8sIHNlIGNvbmNsdXllIHF1ZSBsYXMgdmFyaWFuemFzIHB1ZWRlbiBjb25zaWRlcmFyc2UgZXN0YWTDrXN0aWNhbWVudGUgaWd1YWxlcyBjb24gYmFzZSBlbiBsb3MgcmVzdWx0YWRvcyBvYnNlcnZhZG9zLg0KDQoNCiMgOS4gSW50ZXJ2YWxvIGRlIGNvbmZpYW56YSBwYXJhIGxhIGRpZmVyZW5jaWEgZGUgcHJvbWVkaW9zIGRlIHNvZGlvLCB1dGlsaXphbmRvIGxhIGluZm9ybWFjacOzbiBkZSBsYXMgZG9zIG11ZXN0cmFzIGdlbmVyYWRhcywgY29uIHVuIG5pdmVsIGRlIHNpZ25pZmljYW5jaWEgZGVsIDAsMDUuDQoNCkVuIGVzdGUgY2FzbywgYWwgY29udGludWFyIHRyYWJhamFuZG8gY29uIGRvcyBtdWVzdHJhcyBpbmRlcGVuZGllbnRlcywgeSBkYWRvIHF1ZSBzZSBkZXNjb25vY2VuIGxhcyB2YXJpYW56YXMgcG9ibGFjaW9uYWxlcywgc2UgcmVxdWllcmUgdXRpbGl6YXIgbGEgZGlzdHJpYnVjacOzbiAkdCQgZGUgU3R1ZGVudCBwYXJhIGNvbnN0cnVpciBlbCBpbnRlcnZhbG8gZGUgY29uZmlhbnphLiBTaW4gZW1iYXJnbywgZW4gZWwgYW7DoWxpc2lzIHByZXZpbyBzZSBjb25jbHV5w7MgcXVlIG5vIGV4aXN0ZW4gZGlmZXJlbmNpYXMgc2lnbmlmaWNhdGl2YXMgZW50cmUgbGFzIHZhcmlhbnphcywgcG9yIGxvIHF1ZSBzZSBhc3VtZSBxdWUgbGFzIHZhcmlhbnphcyBwb2JsYWNpb25hbGVzIHNvbiBpZ3VhbGVzLiBBIHBhcnRpciBkZSBlc3RhIHN1cG9zaWNpw7NuLCBzZSBkZXRlcm1pbmFyw6FuIGxvcyB2YWxvcmVzIHJlbGV2YW50ZXMgeSBzZSBjb25zdHJ1aXLDoSB1biBpbnRlcnZhbG8gZGUgY29uZmlhbnphIHBhcmEgbGEgZGlmZXJlbmNpYSBkZSBtZWRpYXMgZGVsIGNvbnRlbmlkbyBkZSBzb2RpbywgdXRpbGl6YW5kbyBlbCBlc3RhZMOtc3RpY28gJHQkIHkgdW4gbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBkZSAkXGFscGhhID0gMHssfTA1JCwgZXMgZGVjaXIsIHVuIG5pdmVsIGRlIGNvbmZpYW56YSBkZWwgOTUlLg0KDQojIyBEYXRvcyANCg0KYGBge3J9DQp0YWJsYV9yZXN1bWVuIDwtIGRhdGEuZnJhbWUoDQogIEdydXBvID0gYygiTXVlc3RyYSAxIiwgIk11ZXN0cmEgMiIpLA0KICBgbmAgPSBjKDUwLCA0MCksDQogIGBNZWRpYWAgPSBjKHJvdW5kKG1lYW4obXVlc3RyYV9hbGVhdG9yaWEkc29kaXVtKSwgMiksIHJvdW5kKG1lYW4obXVlc3RyYV9hbGVhdG9yaWEyJHNvZGl1bSksIDIpKSwNCiAgYHPCsmAgPSBjKDY5MDcuNCwgNjg1Mi44MikNCikNCg0KdGFibGFfcmVzdW1lbiAlPiUNCiAga2FibGUoDQogICAgY29sLm5hbWVzID0gYygiR3J1cG8iLCAibiIsICIkXFxiYXJ7eH0kIiwgInM8c3VwPjI8L3N1cD4iKSwNCiAgICBjYXB0aW9uID0gIiIsDQogICAgZm9ybWF0ID0gImh0bWwiLA0KICAgIGFsaWduID0gImMiLA0KICAgIGVzY2FwZSA9IEZBTFNFDQogICkgJT4lDQogIGthYmxlX3N0eWxpbmcoDQogICAgZnVsbF93aWR0aCA9IEZBTFNFLA0KICAgIGZvbnRfc2l6ZSA9IDE2LA0KICAgIGJvb3RzdHJhcF9vcHRpb25zID0gYygic3RyaXBlZCIsICJob3ZlciIsICJjb25kZW5zZWQiLCAiYm9yZGVyZWQiKQ0KICApICU+JQ0KICByb3dfc3BlYygwLCBib2xkID0gVFJVRSwgYmFja2dyb3VuZCA9ICIjRDlEOUQ5IikgJT4lDQogIGNvbHVtbl9zcGVjKDE6NCwgYm9yZGVyX2xlZnQgPSBUUlVFLCBib3JkZXJfcmlnaHQgPSBUUlVFKSAlPiUNCiAga2FibGVfY2xhc3NpYyhodG1sX2ZvbnQgPSAiQ2FtYnJpYSIpDQoNCmBgYA0KDQojIyBDYWxjdWxhciBlbCB2YWxvciBkZSB0IHkgbG9zIGdyYWRvcyBkZSBsaWJlcnRhZA0KDQpgYGB7cn0NCiMgTml2ZWwgZGUgc2lnbmlmaWNhbmNpYQ0KYWxwaGFfMyA8LSAwLjA1DQojIDEuIEdyYWRvcyBkZSBsaWJlcnRhZA0KZ2wgPC0gbl8xICsgbl8yIC0gMg0KDQojIDIuIFZhbG9yZXMgY3LDrXRpY29zIHQgYmlsYXRlcmFsDQp0X2NyaXRpY29fcG9zIDwtIHF0KDEgLSBhbHBoYV8zLzIsIGRmID0gZ2wpDQp0X2NyaXRpY29fbmVnIDwtIC10X2NyaXRpY29fcG9zDQoNCiMgMy4gSW1wcmltaXIgcmVzdWx0YWRvcw0KY2F0KCJHcmFkb3MgZGUgbGliZXJ0YWQ6IiwgZ2wsICJcbiIpDQpjYXQoIlZhbG9yIGNyw610aWNvIGluZmVyaW9yOiIsIHJvdW5kKHRfY3JpdGljb19uZWcsIDQpLCAiXG4iKQ0KY2F0KCJWYWxvciBjcsOtdGljbyBzdXBlcmlvcjoiLCByb3VuZCh0X2NyaXRpY29fcG9zLCA0KSwgIlxuIikNCmBgYA0KDQojIyBDYWxjdWxhciBTcCANCg0KYGBge3J9DQojIDEuIEPDoWxjdWxvIGRlIHNwDQpzcCA8LSBzcXJ0KCAoKG5fMSAtIDEpKnZhcmlhbnphXzEgKyAobl8yIC0gMSkqdmFyaWFuemFfMikgLyAobl8xICsgbl8yIC0gMikgKQ0KDQojIDIuIEltcHJlc2nDs24gZGUgcmVzdWx0YWRvDQpjYXQoIkRlc3ZpYWNpw7NuIGVzdMOhbmRhciBjb21iaW5hZGEgKHNfcCk6Iiwgcm91bmQoc3AsIDQpLCAiXG4iKQ0KYGBgDQoNCiMjIENhbGN1bGFyIGxvcyBsaW1pdGVzIGRlbCBpbnRlcnZhbG8gZGUgY29uZmlhbnphIA0KYGBge3J9DQojIDEuIE1lZGlhcyBtdWVzdHJhbGVzDQptZWRpYTEgPC0gbWVhbihtdWVzdHJhX2FsZWF0b3JpYSRzb2RpdW0pDQptZWRpYTIgPC0gbWVhbihtdWVzdHJhX2FsZWF0b3JpYTIkc29kaXVtKQ0KDQojIDIuIERpZmVyZW5jaWEgZGUgbWVkaWFzDQpkaWZlcmVuY2lhX21lZGlhcyA8LSBtZWRpYTEgLSBtZWRpYTINCg0KIyAzLiBFcnJvciBlc3TDoW5kYXINCmVycm9yX2VzdGFuZGFyIDwtIHNwICogc3FydCgxL25fMSArIDEvbl8yKQ0KDQojIEzDrW1pdGVzIGRlbCBpbnRlcnZhbG8NCmxpbV9pbmYgPC0gZGlmZXJlbmNpYV9tZWRpYXMgLSB0X2NyaXRpY29fcG9zICogZXJyb3JfZXN0YW5kYXINCmxpbV9zdXAgPC0gZGlmZXJlbmNpYV9tZWRpYXMgKyB0X2NyaXRpY29fcG9zICogZXJyb3JfZXN0YW5kYXINCg0KIyBNb3N0cmFyIHJlc3VsdGFkb3MNCmNhdCgiSW50ZXJ2YWxvIGRlIGNvbmZpYW56YSAoOTUlKSBwYXJhIGxhIGRpZmVyZW5jaWEgZGUgbWVkaWFzOlxuIikNCmNhdCgiWyIsIHJvdW5kKGxpbV9pbmYsIDIpLCAiLCIsIHJvdW5kKGxpbV9zdXAsIDIpLCAiXVxuIikNCg0KYGBgDQpFcyBkZWNpcjoNCiQkDQotMzJ7LH05OCA8IFxtdV8xIC0gXG11XzIgPCAzNnssfTk4DQokJA0KDQpDb21vIHNlIG9ic2VydmEsIGVsIHZhbG9yICQwJCBzZSBlbmN1ZW50cmEgZGVudHJvIGRlbCBpbnRlcnZhbG8gZGUgY29uZmlhbnphIGNhbGN1bGFkby4gUG9yIHRhbnRvLCBjb24gdW4gOTVcJSBkZSBjb25maWFuemEsIHNlIGNvbmNsdXllIHF1ZSAqKm5vIGhheSBldmlkZW5jaWEgZXN0YWTDrXN0aWNhIHN1ZmljaWVudGUgcGFyYSBhZmlybWFyIHF1ZSBleGlzdGEgdW5hIGRpZmVyZW5jaWEgc2lnbmlmaWNhdGl2YSBlbnRyZSBsYXMgbWVkaWFzIHBvYmxhY2lvbmFsZXMgZGVsIGNvbnRlbmlkbyBkZSBzb2RpbyBlbiBhbWJhcyBtdWVzdHJhcyoqLg0KDQojIDEwLiBQcnVlYmEgZGUgaGlww7N0ZXNpcyBwYXJhIHZlcmlmaWNhciBzaSBsb3MgcHJvbWVkaW9zIGRlIHNvZGlvIHNvbiBpZ3VhbGVzIG8gZGlmZXJlbnRlcywgdXRpbGl6YW5kbyBsYSBpbmZvcm1hY2nDs24gZGUgbGFzIGRvcyBtdWVzdHJhcyBnZW5lcmFkYXMgeSBlbXBsZWFuZG8gdW4gbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBkZWwgMCwwNS4NCg0KRGFkbyBxdWUgc2UgdHJhYmFqYSBjb24gZG9zIG11ZXN0cmFzIGluZGVwZW5kaWVudGVzIHkgc2UgZGVzY29ub2NlIGxhIHZhcmlhbnphIHBvYmxhY2lvbmFsLCBwZXJvIHNlIGFzdW1lIHF1ZSBhbWJhcyB2YXJpYW56YXMgc29uIGlndWFsZXMgKHNlZ8O6biBsYSBwcnVlYmEgcHJldmlhKSwgc2UgZW1wbGVhcsOhIGVsIGVzdGFkw61zdGljbyB0IGRlIFN0dWRlbnQgcGFyYSBjb21wYXJhciBsb3MgcHJvbWVkaW9zIHBvYmxhY2lvbmFsZXMgZGUgc29kaW8uDQoNCiMjIERhdG9zDQpgYGB7cixlY2hvPUZBTFNFfQ0KdGFibGFfcmVzdW1lbiA8LSBkYXRhLmZyYW1lKA0KICBHcnVwbyA9IGMoIk11ZXN0cmEgMSIsICJNdWVzdHJhIDIiKSwNCiAgYG5gID0gYyg1MCwgNDApLA0KICBgTWVkaWFgID0gYyhyb3VuZChtZWFuKG11ZXN0cmFfYWxlYXRvcmlhJHNvZGl1bSksIDIpLCByb3VuZChtZWFuKG11ZXN0cmFfYWxlYXRvcmlhMiRzb2RpdW0pLCAyKSksDQogIGBzwrJgID0gYyg2OTA3LjQsIDY4NTIuODIpDQopDQoNCnRhYmxhX3Jlc3VtZW4gJT4lDQogIGthYmxlKA0KICAgIGNvbC5uYW1lcyA9IGMoIkdydXBvIiwgIm4iLCAiJFxcYmFye3h9JCIsICJzPHN1cD4yPC9zdXA+IiksDQogICAgY2FwdGlvbiA9ICIiLA0KICAgIGZvcm1hdCA9ICJodG1sIiwNCiAgICBhbGlnbiA9ICJjIiwNCiAgICBlc2NhcGUgPSBGQUxTRQ0KICApICU+JQ0KICBrYWJsZV9zdHlsaW5nKA0KICAgIGZ1bGxfd2lkdGggPSBGQUxTRSwNCiAgICBmb250X3NpemUgPSAxNiwNCiAgICBib290c3RyYXBfb3B0aW9ucyA9IGMoInN0cmlwZWQiLCAiaG92ZXIiLCAiY29uZGVuc2VkIiwgImJvcmRlcmVkIikNCiAgKSAlPiUNCiAgcm93X3NwZWMoMCwgYm9sZCA9IFRSVUUsIGJhY2tncm91bmQgPSAiI0Q5RDlEOSIpICU+JQ0KICBjb2x1bW5fc3BlYygxOjQsIGJvcmRlcl9sZWZ0ID0gVFJVRSwgYm9yZGVyX3JpZ2h0ID0gVFJVRSkgJT4lDQogIGthYmxlX2NsYXNzaWMoaHRtbF9mb250ID0gIkNhbWJyaWEiKQ0KDQpgYGANCg0KIyMgUGFzbyAxOiBGb3JtdWxhY2nDs24gZGUgJEhfMCQgeSAkSF8xJA0KDQokJA0KSF8wOiBcbXVfMSA9IFxtdV8yIFxcDQpIXzE6IFxtdV8xIFxuZSBcbXVfMg0KJCQNCg0KU2UgcGxhbnRlYSBlc3RhIGZvcm11bGFjacOzbiBwb3JxdWUgc2UgZGVzZWEgZXZhbHVhciBzaSBsYXMgbWVkaWFzIHBvYmxhY2lvbmFsZXMgc29uIGRpZmVyZW50ZXMgbyBpZ3VhbGVzLCBwb3IgdGFudG8sIGxhIGhpcMOzdGVzaXMgYWx0ZXJuYXRpdmEgKCRIXzEkKSBzZSBlc3RhYmxlY2UgY29tbyAkXG11XzEgXG5lIFxtdV8yJCwgeWEgcXVlIGVzIGxvIHF1ZSBzZSBxdWllcmUgcHJvYmFyLCB5IGxhIGhpcMOzdGVzaXMgbnVsYSAoJEhfMCQpIGNvbW8gc3UgY29tcGxlbWVudG8gbMOzZ2ljbzogJFxtdV8xID0gXG11XzIkLiBEYWRvIHF1ZSBsYSBkaXJlY2Npw7NuIGRlIGxhIHBydWViYSBsYSBkZXRlcm1pbmEgJEhfMSQsIGVzdGEgY29ycmVzcG9uZGUgYSB1bmEgKipwcnVlYmEgYmlsYXRlcmFsKiouDQoNCiMjIFBhc28gMjogRGVmaW5pY2nDs24gZGUgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYQ0KJCQNClxhbHBoYSA9IDB7LH0wNQ0KJCQNCiMjIFBhc28gMzogQ8OhbGN1bG8gZGUgZXN0YWTDrXN0aWNvIGRlIHBydWViYQ0KDQpgYGB7cn0NCiMgMS4gVmFsb3IgZGUgbGEgZGlmZXJlbmNpYSBkZSBtZWRpYXMgYmFqbyBsYSBoaXDDs3Rlc2lzIG51bGENCm11X2RpZmVyZW5jaWEgPC0gMA0KDQojIDIuIEVycm9yIGVzdMOhbmRhcg0Kc2VfMiA8LSBzcCAqIHNxcnQoMS9uXzEgKyAxL25fMikgDQoNCiMgMy4gRXN0YWTDrXN0aWNvIHQNCnRfcHJ1ZWJhMiA8LSAoKG1lZGlhMSAtIG1lZGlhMikgLSBtdV9kaWZlcmVuY2lhKSAvIHNlXzINCg0KIyA0LiBNb3N0cmFyIHJlc3VsdGFkbw0KY2F0KCJFc3RhZMOtc3RpY28gdCA9Iiwgcm91bmQodF9wcnVlYmEyLCA0KSkNCmBgYA0KDQokJA0KdCA9IFxmcmFjeygxNjUuNSAtIDE2My41KSAtIDB9ezgyLjk3IFxjZG90IFxzcXJ0e1xmcmFjezF9ezUwfSArIFxmcmFjezF9ezQwfX19ID0gMC4xMTM2DQokJA0KDQojIyBQYXNvIDQ6IEZvcm11bGFjacOzbiBkZSByZWdsYSBkZSBkZWNpc2nDs24NCg0KIyMjIE1ldMOzZG8gMSAtIFJlZ2nDs24gY3LDrXRpY2ENCg0KUGFyYSBhcGxpY2FyIGVsIG3DqXRvZG8gZGUgbGEgcmVnacOzbiBjcsOtdGljYSwgcHJpbWVybyBlcyBuZWNlc2FyaW8gY2FsY3VsYXIgbG9zIHZhbG9yZXMgY3LDrXRpY29zIGRlIGxhIGRpc3RyaWJ1Y2nDs24gdCwgZGFkbyBxdWUgc2UgdHJhdGEgZGUgdW5hIHBydWViYSBiaWxhdGVyYWwuIEVuIGVzdGUgY2FzbywgZWwgbml2ZWwgZGUgc2lnbmlmaWNhbmNpYSBcKCBcYWxwaGEgPSAweyx9MDUgXCkgc2UgZGl2aWRlIGVuIGRvcyBwYXJ0ZXMsIGFzaWduYW5kbyBcKCBcYWxwaGEvMiA9IDB7LH0wMjUgXCkgYSBjYWRhIGNvbGEsIHV0aWxpemFuZG8gbG9zIGdyYWRvcyBkZSBsaWJlcnRhZCBjb3JyZXNwb25kaWVudGVzIGEgY2FkYSBtdWVzdHJhIChcKCBnbF8xID0gNTAgLSAxID0gNDkgXCkgeSBcKCBnbF8yID0gNDAgLSAxID0gMzkgXCkpLCBzZSBkZXRlcm1pbmFuIGxvcyBwdW50b3MgY3LDrXRpY29zIHF1ZSBkZWZpbmVuIGxvcyBsw61taXRlcyBkZSBsYSByZWdpw7NuIGRlIHJlY2hhem8sIHBlcm1pdGllbmRvIGFzw60gbGEgY29tcGFyYWNpw7NuIGNvbiBlbCB2YWxvciBkZWwgZXN0YWTDrXN0aWNvIHQgY2FsY3VsYWRvLg0KDQpgYGB7cn0NCiMgMS4gR3JhZG9zIGRlIGxpYmVydGFkDQpnbCA8LSBuXzEgKyBuXzIgLSAyDQoNCiMgQ2FsY3VsYXIgZWwgdmFsb3IgY3LDrXRpY28gdCBwYXJhIHVuYSBwcnVlYmEgYmlsYXRlcmFsDQp0X2NyaXRpY29fc3VwZXJpb3IxIDwtIHF0KDEgLSBhbHBoYV8zLzIsIGRmID0gZ2wpICAjIFZhbG9yIGNyw610aWNvIHN1cGVyaW9yDQp0X2NyaXRpY29faW5mZXJpb3IyIDwtIC10X2NyaXRpY29fc3VwZXJpb3IxICAjIFZhbG9yIGNyw610aWNvIGluZmVyaW9yDQoNCiMgTW9zdHJhciBsb3MgcmVzdWx0YWRvcw0KY2F0KCJWYWxvciBjcsOtdGljbyB0IGluZmVyaW9yID0iLCByb3VuZCh0X2NyaXRpY29faW5mZXJpb3IyLCA0KSwgIlxuIikNCmNhdCgiVmFsb3IgY3LDrXRpY28gdCBzdXBlcmlvciA9Iiwgcm91bmQodF9jcml0aWNvX3N1cGVyaW9yMSwgNCksICJcbiIpDQpgYGANCg0KYGBge3IsZWNobz1GQUxTRX0NCnhfdmFscyA8LSBzZXEoLTQsIDQsIGxlbmd0aC5vdXQgPSAxMDAwKQ0KZGVuc2lkYWQgPC0gZHQoeF92YWxzLCBkZiA9IGdsKQ0KZGYgPC0gZGF0YS5mcmFtZSh4ID0geF92YWxzLCB5ID0gZGVuc2lkYWQpDQoNCmdncGxvdChkZiwgYWVzKHgsIHkpKSArDQogIGdlb21fbGluZShjb2xvciA9ICJibGFjayIsIHNpemUgPSAxKSArDQogIGdlb21faGxpbmUoeWludGVyY2VwdCA9IDAsIGNvbG9yID0gImJsYWNrIiwgc2l6ZSA9IDAuOCkgKw0KICANCiAgZ2VvbV9hcmVhKGRhdGEgPSBzdWJzZXQoZGYsIHggPj0gdF9jcml0aWNvX3N1cGVyaW9yMSksIGFlcyh4LCB5KSwgZmlsbCA9ICJyZWQiLCBhbHBoYSA9IDAuNCkgKw0KICBnZW9tX2FyZWEoZGF0YSA9IHN1YnNldChkZiwgeCA8PSB0X2NyaXRpY29faW5mZXJpb3IyKSwgYWVzKHgsIHkpLCBmaWxsID0gInJlZCIsIGFscGhhID0gMC40KSArDQogIA0KICBnZW9tX3NlZ21lbnQoYWVzKHggPSB0X2NyaXRpY29faW5mZXJpb3IyLCB4ZW5kID0gdF9jcml0aWNvX2luZmVyaW9yMiwgeSA9IDAsIHllbmQgPSBkdCh0X2NyaXRpY29faW5mZXJpb3IyLCBkZiA9IGdsKSksDQogICAgICAgICAgICAgICBjb2xvciA9ICJyZWQiLCBsaW5ldHlwZSA9ICJkYXNoZWQiLCBzaXplID0gMS4yKSArDQogIGdlb21fc2VnbWVudChhZXMoeCA9IHRfY3JpdGljb19zdXBlcmlvcjEsIHhlbmQgPSB0X2NyaXRpY29fc3VwZXJpb3IxLCB5ID0gMCwgeWVuZCA9IGR0KHRfY3JpdGljb19zdXBlcmlvcjEsIGRmID0gZ2wpKSwNCiAgICAgICAgICAgICAgIGNvbG9yID0gInJlZCIsIGxpbmV0eXBlID0gImRhc2hlZCIsIHNpemUgPSAxLjIpICsNCiAgDQogIGdlb21fc2VnbWVudChhZXMoeCA9IHRfcHJ1ZWJhMiwgeGVuZCA9IHRfcHJ1ZWJhMiwgeSA9IDAsIHllbmQgPSBkdCh0X3BydWViYTIsIGRmID0gZ2wpKSwNCiAgICAgICAgICAgICAgIGNvbG9yID0gImJsdWUiLCBsaW5ldHlwZSA9ICJkb3R0ZWQiLCBzaXplID0gMS4yKSArDQogIA0KICBhbm5vdGF0ZSgidGV4dCIsIHggPSB0X2NyaXRpY29faW5mZXJpb3IyIC0gMC4yLCB5ID0gZHQodF9jcml0aWNvX2luZmVyaW9yMiwgZGYgPSBnbCkgKyAwLjAyLA0KICAgICAgICAgICBsYWJlbCA9IHBhc3RlMCgidCA9ICIsIHJvdW5kKHRfY3JpdGljb19pbmZlcmlvcjIsIDQpKSwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDQpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gdF9jcml0aWNvX3N1cGVyaW9yMSArIDAuMiwgeSA9IGR0KHRfY3JpdGljb19zdXBlcmlvcjEsIGRmID0gZ2wpICsgMC4wMiwNCiAgICAgICAgICAgbGFiZWwgPSBwYXN0ZTAoInQgPSAiLCByb3VuZCh0X2NyaXRpY29fc3VwZXJpb3IxLCA0KSksIGNvbG9yID0gInJlZCIsIHNpemUgPSA0KSArDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IHRfcHJ1ZWJhMiArIDAuMiwgeSA9IGR0KHRfcHJ1ZWJhMiwgZGYgPSBnbCkgKyAwLjAyLA0KICAgICAgICAgICBsYWJlbCA9IHBhc3RlMCgidCA9ICIsIHJvdW5kKHRfcHJ1ZWJhMiwgNCkpLCBjb2xvciA9ICJibHVlIiwgc2l6ZSA9IDQpICsNCiAgDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IC0zLjUsIHkgPSAwLjA1LCBsYWJlbCA9ICJSZWdpw7NuIGRlXG5yZWNoYXpvIiwgY29sb3IgPSAicmVkIiwgc2l6ZSA9IDQpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gMy41LCB5ID0gMC4wNSwgbGFiZWwgPSAiUmVnacOzbiBkZVxucmVjaGF6byIsIGNvbG9yID0gInJlZCIsIHNpemUgPSA0KSArDQogIGFubm90YXRlKCJ0ZXh0IiwgeCA9IDAsIHkgPSAwLjEsIGxhYmVsID0gIlJlZ2nDs24gZGVcbm5vIHJlY2hhem8iLCBjb2xvciA9ICJkYXJrZ3JlZW4iLCBzaXplID0gNCkgKw0KICANCiAgc2NhbGVfeF9jb250aW51b3VzKGxpbWl0cyA9IGMoLTQsIDQpLCBicmVha3MgPSBzZXEoLTQsIDQsIGJ5ID0gMSkpICsNCiAgbGFicygNCiAgICB0aXRsZSA9ICJEaXN0cmlidWNpw7NuIHQiLA0KICAgIHN1YnRpdGxlID0gIlJlZ2nDs24gY3LDrXRpY2EgKM6xID0gMC4wNSkgeSB2YWxvciB0IGRlIHBydWViYSIsDQogICAgeCA9ICJ0IiwNCiAgICB5ID0gIkRlbnNpZGFkIg0KICApICsNCiAgdGhlbWVfbWluaW1hbChiYXNlX3NpemUgPSAxNCkNCg0KYGBgDQojIyMgTWV0w7NkbyAyIC0gVmFsb3JfcA0KDQpQYXJhIGNvbXBsZW1lbnRhciBlbCBhbsOhbGlzaXMsIHNlIGFwbGljYSBlbCBtw6l0b2RvIGRlbCB2YWxvciBwLCBxdWUgcGVybWl0ZSBjb250cmFzdGFyIGxhIGhpcMOzdGVzaXMgbnVsYSBldmFsdWFuZG8gbGEgcHJvYmFiaWxpZGFkIGRlIG9idGVuZXIgdW4gdmFsb3IgZGVsIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgdGFuIGV4dHJlbW8gY29tbyBlbCBvYnNlcnZhZG8sIGJham8gZWwgc3VwdWVzdG8gZGUgcXVlIFwoIEhfMCBcKSBlcyB2ZXJkYWRlcmEuIERhZG8gcXVlIHNlIHRyYXRhIGRlIHVuYSAqKnBydWViYSBiaWxhdGVyYWwqKiwgZWwgdmFsb3IgcCBzZSBjYWxjdWxhIGNvbW8gbGEgcHJvYmFiaWxpZGFkIGRlIG9idGVuZXIgdW4gdmFsb3IgZGVsIGVzdGFkw61zdGljbyB0IG3DoXMgZXh0cmVtbyBxdWUgZWwgb2JzZXJ2YWRvLCBjb25zaWRlcmFuZG8gdGFudG8gbGEgY29sYSBpenF1aWVyZGEgY29tbyBsYSBjb2xhIGRlcmVjaGEgZGUgbGEgZGlzdHJpYnVjacOzbjoNCg0KJCQNClAodCA+IDAuMTEzNikNCiQkDQoNCkVuIG51ZXN0cm8gY2FzbyBlc3BlY8OtZmljbywgZGFkbyBxdWUgZWwgdmFsb3IgY2FsY3VsYWRvIGRlbCBlc3RhZMOtc3RpY28gdCBlcyBcKCB0ID0gMC4xMTM2IFwpLCBzZSBkZWJlIGV2YWx1YXIgbGEgcHJvYmFiaWxpZGFkIGRlIHF1ZSB1bmEgdmFyaWFibGUgYWxlYXRvcmlhIHQgc2VhIG3DoXMgZXh0cmVtYSBxdWUgZXN0ZSB2YWxvciwgYmFqbyBlbCBzdXB1ZXN0byBkZSBxdWUgbGEgaGlww7N0ZXNpcyBudWxhIGVzIHZlcmRhZGVyYS4NCg0KYGBge3J9DQojIDEuIEPDoWxjdWxvIGRlbCB2YWxvciBwIChwcnVlYmEgYmlsYXRlcmFsIGNvbiB0KQ0KdmFsb3JfcF90IDwtIDIgKiBwdChhYnModF9wcnVlYmEyKSwgZGYgPSBnbCwgbG93ZXIudGFpbCA9IEZBTFNFKQ0KDQojIDIuIE1vc3RyYXIgcmVzdWx0YWRvDQpjYXQoIlZhbG9yIHAgPSIsIHJvdW5kKHZhbG9yX3BfdCwgNCkpDQpgYGANCiMjIFBhc28gNTogVG9tYSBkZSBkZWNpc2nDs24gY29uIHJlc3BlY3RvIGEgbGFzIGhpcMOzdGVzaXMgDQoNCiMjIyBNZXTDs2RvIDEgLSBSZWdpw7NuIGNyw610aWNhDQoNCkVuIGVzdGUgY2FzbywgY29tbyBzZSBvYnNlcnZhIGVuIGxhIGdyw6FmaWNhLCBlbCB2YWxvciBjYWxjdWxhZG8gZGVsIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgXCggdCA9IDAuMTEzNiBcKSBzZSBlbmN1ZW50cmEgZGVudHJvIGRlIGxhIHJlZ2nDs24gZGUgbm8gcmVjaGF6bywgeWEgcXVlIGVzdMOhIGVudHJlIGxvcyB2YWxvcmVzIGNyw610aWNvcyBcKCB0ID0gLTEuOTg3MyBcKSB5IFwoIHQgPSAxLjk4NzMgXCkuIERhZG8gcXVlIGVsIGVzdGFkw61zdGljbyBkZSBwcnVlYmEgbm8gY2FlIGRlbnRybyBkZSBsYSByZWdpw7NuIGNyw610aWNhLCoqbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEqKi4gRXN0byBpbmRpY2EgcXVlIG5vIGV4aXN0ZSBldmlkZW5jaWEgc3VmaWNpZW50ZSBwYXJhIGFmaXJtYXIgcXVlIGxhcyBtZWRpYXMgZGUgbG9zIGRvcyBncnVwb3Mgc29uIHNpZ25pZmljYXRpdmFtZW50ZSBkaWZlcmVudGVzLg0KDQojIyMgTWV0w7NkbyAyIC0gVmFsb3JfcA0KDQokJA0KcCA9IDB7LH05MDk4PiBcYWxwaGEgPSAweyx9MDUNCiQkDQpDb21vIGVsIHZhbG9yIHAgZXMgbWF5b3IgcXVlIFwoIFxhbHBoYSBcKSwgbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEgXCggSF8wIFwpLg0KDQojIyBQYXNvIDY6IENvbmNsdXNpw7NuDQoNCkVuIGVsIGFuw6FsaXNpcyByZWFsaXphZG8gcGFyYSBjb21wYXJhciBsb3MgcHJvbWVkaW9zIGRlIHNvZGlvIGRlIGxhcyBkb3MgbXVlc3RyYXMsIHNlIGFwbGljYXJvbiBkb3MgbcOpdG9kb3MgY29tcGxlbWVudGFyaW9zOiBlbCB2YWxvciBwIHkgbGEgcmVnacOzbiBjcsOtdGljYS4gRWwgdmFsb3IgcCBjYWxjdWxhZG8gZnVlIG1heW9yIHF1ZSBlbCBuaXZlbCBkZSBzaWduaWZpY2FuY2lhIFwoIFxhbHBoYSA9IDAuMDUgXCksIGluZGljYW5kbyBxdWUgbm8gc2UgcmVjaGF6YSBsYSBoaXDDs3Rlc2lzIG51bGEuIERlIG1hbmVyYSBzaW1pbGFyLCBlbCBlc3RhZMOtc3RpY28gZGUgcHJ1ZWJhIFwoIHQgPSAwLjExMzYgXCkgc2Ugc2l0dcOzIGRlbnRybyBkZSBsYSByZWdpw7NuIGRlIG5vIHJlY2hhem8sIGVudHJlIGxvcyB2YWxvcmVzIGNyw610aWNvcyBcKCB0ID0gLTEuOTg3MyBcKSB5IFwoIHQgPSAxLjk4NzMgXCksIGxvIHF1ZSB0YW1iacOpbiBsbGV2w7MgYSBubyByZWNoYXphciBsYSBoaXDDs3Rlc2lzIG51bGEsIGVzdG9zIHJlc3VsdGFkb3Mgc3VnaWVyZW4gcXVlIG5vIGhheSBldmlkZW5jaWEgZXN0YWTDrXN0aWNhIHN1ZmljaWVudGUgcGFyYSBjb25jbHVpciBxdWUgbGFzIG1lZGlhcyBkZSBzb2RpbyBkZSBsYXMgZG9zIG11ZXN0cmFzIGRpZmllcmVuIHNpZ25pZmljYXRpdmFtZW50ZS4NCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("about.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,794 @@
+---
+title: "Estimación estadística"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    code_download: true
+    theme: lumen 
+    toc_depth: 3 
+    css: styles.css
+    pandoc_args: ["--variable=footnotes-title:Bibliografía"]
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(readxl)
+library(DT)
+library(kableExtra)
+library(dplyr)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+cereal1 <- read_excel("C:/Users/User/Downloads/cereal1.xlsx")
+```
+```{css,echo=FALSE}
+.column {display:flex;}
+h1{color:rgb(26, 72, 112)}
+h2{color:rgb(26, 72, 112)}
+h3{color:rgb(26, 72, 112)}
+```
+
+# Muestreo y prueba de hipótesis
+
+# 4. Muestra aleatoria simple de 50 cereales
+
+```{r}
+# 1. Definición de la semilla para asegurar la reproducibilidad del muestreo
+set.seed(123)
+
+# 2. Se asigna un ID único a cada cereal para facilitar su identificación posterior
+cereal1$ID_Original <- 1:nrow(cereal1)
+
+# 3. Definición del tamaño de la muestra
+n_1 <- 50  
+
+# 4. Selección de la muestra aleatoria simple SIN reemplazo
+muestreo_aleatorio <- sample(1:nrow(cereal1), size = n_1, replace = FALSE)
+
+# 5. Creación del subconjunto de datos con los cereales seleccionados
+muestra_aleatoria <- cereal1[muestreo_aleatorio, ]
+
+# 6. Tabla que presenta los datos de la muestra seleccionada
+datatable(
+  muestra_aleatoria[, c("ID_Original", names(cereal1)[names(cereal1) != "ID_Original"])], 
+  options = list(
+    pageLength = 10,
+    autoWidth = TRUE,
+    searching = TRUE,
+    scrollX = TRUE,
+    lengthMenu = list(c(10, 20, 50, -1), c("10", "20", "50", "Todos"))
+  ),
+  caption = "Muestra Aleatoria de Cereales",
+  rownames = FALSE
+)
+```
+
+# 5. Un artículo indica que el conjunto de cereales de la tabla estan dentro de los más saludables del mercado. Indica que en promedio tiene menos de 140mg de sodio. Utilizando la información de la muestra generada en el ítem 4 pruebe  esta afirmación a un nivel de significacia de 0,05. 
+
+Antes de realizar la prueba de hipótesis, es importante señalar que se cuenta con la base de datos completa, la cual representa a la población en su totalidad, lo cual permite calcular directamente parámetros poblacionales como la desviación estándar del contenido de sodio, que será utilizada para aplicar la prueba mediante una distribución normal (Z), considerando que la muestra aleatoria seleccionada tiene un tamaño de 50, lo cual se considera suficientemente grande. Este enfoque es válido, ya que no es necesario estimar la variabilidad a partir de una muestra cuando se conoce la variabilidad real de toda la población.
+Asimismo, se calculará la media muestral del sodio, ya que este valor es esencial para determinar el estadístico Z, el cual nos permitirá contrastar la hipótesis planteada.
+
+```{r}
+# 1. Media muestral
+media_muestral <- mean(muestra_aleatoria$sodium, na.rm = TRUE)
+
+# 2. Desviación estándar poblacional
+desviacion_poblacional <- sd(cereal1$sodium, na.rm = TRUE)
+
+# 3. Impresión de resultados
+cat("Media muestral (x̄):", round(media_muestral, 2), "\n")
+cat("Desviación estándar poblacional (σ):", round(desviacion_poblacional, 2), "\n")
+```
+## Datos 
+
+Ahora bien, teniendo en cuenta las anteriores medidas, procederemos a agrupar todos los datos necesarios para el desarrollo de la prueba de hipótesis, con el fin de facilitar el procedimiento:
+
+- $\bar{x} = 165{,}50$
+- $n = 50$
+- $\mu_0 = 140$
+- $\sigma = 83{,}83$
+
+## Paso 1: Formulación de $H_0$ y $H_1$
+
+$$
+H_0: \mu \geq 140\ \text{mg} \\
+H_1: \mu < 140\ \text{mg}
+$$
+La formulación de las hipótesis responde al objetivo del estudio, que consiste en evaluar si el contenido promedio de sodio en los cereales es menor a 140 mg. Por esta razón, la hipótesis alternativa ($H_1$) se plantea como $\mu < 140\ \text{mg}$, ya que es lo que se desea probar. Por tanto, la hipótesis nula ($H_0$) se establece como el complemento lógico de $H_1$, es decir, $\mu \geq 140\ \text{mg}$. Esta formulación permite aplicar correctamente la prueba unilateral con cola hacia la izquierda.
+
+## Paso 2: Definición de nivel de significancia
+
+$$
+\alpha = 0{,}05
+$$
+El nivel de significancia utilizado en esta prueba es $\alpha = 0{,}05$, valor que fue establecido en el enunciado del ejercicio. Este nivel de significancia representa la probabilidad máxima de cometer un error tipo I, es decir, rechazar la hipótesis nula cuando en realidad es verdadera.
+
+## Paso 3: Cálculo de estadístico de prueba 
+
+```{r}
+mu_0 <- 140
+# 1. Estadístico de prueba Z
+z_prueba <- (media_muestral - mu_0) / (desviacion_poblacional / sqrt(n_1))
+
+# 2. Impresión de resultado 
+cat("Estadístico de prueba Z =", round(z_prueba, 4))
+```
+$$
+Z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}} = \frac{165{,}50 - 140}{83{,}83 / \sqrt{50}} = 2{,}1509
+$$
+
+El valor calculado del estadístico de prueba es $Z = 2{,}1509$. Este resultado será utilizado para aplicar dos métodos de decisión: el de la región crítica y el del valor p. En el primer caso, se comparará con el valor crítico correspondiente al nivel de significancia establecido. En el segundo, se calculará la probabilidad asociada a este valor de $Z$ y se comparará con $\alpha = 0{,}05$. Ambos enfoques permitirán determinar si existe evidencia suficiente para rechazar la hipótesis nula en favor de la alternativa.
+
+## Paso 4: Formulación de regla de decisión
+### Metódo 1 - Región crítica
+
+Para aplicar el método de la región crítica, es necesario determinar el valor crítico correspondiente al nivel de significancia establecido. Dado que se trata de una prueba unilateral de cola izquierda, el valor crítico $z_\alpha$ se obtiene a partir de la distribución normal estándar y representa el punto de corte en la cola izquierda con una probabilidad acumulada igual a $\alpha = 0{,}05$. Cualquier valor del estadístico de prueba menor a $z_\alpha$ se ubicará dentro de la región crítica, lo cual implicaría el rechazo de la hipótesis nula.
+
+```{r}
+# 1. Nivel de significancia
+alpha <- 0.05
+
+# 2. Cálculo del valor crítico z para una cola izquierda
+z_critico <- qnorm(alpha)
+
+# 3. Mostrar el resultado
+cat("Valor crítico (z[0.05]) =", round(z_critico, 4))
+```
+```{r,echo=FALSE}
+x_vals <- seq(-4, 4, length.out = 1000)
+densidad <- dnorm(x_vals)
+df <- data.frame(x = x_vals, y = densidad)
+
+ggplot(df, aes(x, y)) +
+  geom_line(color = "black",linewidth = 1) +
+  geom_hline(yintercept = 0, color = "black", size = 0.5,linewidth = 0,8) +
+  geom_area(data = subset(df, x <= z_critico), aes(x, y), fill = "red", alpha = 0.4) +
+  geom_segment(aes(x = z_critico, xend = z_critico, y = 0, yend = dnorm(z_critico)), 
+               color = "red", linetype = "dashed", size = 1) +
+  annotate("text", x = z_critico - 0.1, y = dnorm(z_critico) + 0.02, 
+           label = paste0("z\u03B1 = ", round(z_critico, 4)), color = "red") +
+  geom_segment(aes(x = z_prueba, xend = z_prueba, y = 0, yend = dnorm(z_prueba)), 
+               color = "blue", linetype = "dotted", size = 1) +
+  annotate("text", x = z_prueba + 0.2, y = dnorm(z_prueba) + 0.02, 
+           label = paste0("Z = ", round(z_prueba, 4)), color = "blue") +
+
+  annotate("text", x = -3, y = 0.05, label = "Región de rechazo", color = "red", size = 4) +
+  annotate("text", x = 0, y = 0.2, label = "Región de no rechazo", color = "darkgreen", size = 4) +
+
+  scale_x_continuous(
+    limits = c(-4, 4),
+    breaks = seq(-4, 4, by = 1)
+  ) +
+
+  labs(
+    title = "Distribución Normal Estándar",
+    subtitle = "Región crítica (α = 0.05) y valor Z de prueba",
+    x = "Z",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+
+### Metódo 2 - Valor_p
+
+Para complementar el análisis, se aplica el método del valor p, el cual permite contrastar la hipótesis nula evaluando la probabilidad de obtener un valor del estadístico de prueba tan extremo como el observado, bajo el supuesto de que $H_0$ es verdadera. Dado que se trata de una prueba unilateral de cola izquierda, el valor p se calcula como la probabilidad de que una variable aleatoria normal estándar tome un valor menor al estadístico de prueba obtenido: 
+
+$$
+P(Z < 2{,}1509)
+$$
+```{r}
+# 1. Cálculo del valor p (prueba unilateral izquierda)
+valor_p <- pnorm(z_prueba)
+
+# 2. Mostrar resultado
+cat("Valor p =", round(valor_p, 4))
+```
+## Paso 5: Toma de decisión con respecto a las hipótesis 
+
+### Metódo 1 - Región crítica
+
+Según el método de la región crítica, se compara el valor del estadístico de prueba con el valor crítico correspondiente al nivel de significancia $\alpha = 0{,}05$. Dado que el valor calculado del estadístico de prueba $Z = 2{,}1509$ se encuentra a la derecha del valor crítico $z_\alpha = -1{,}6449$, no cae dentro de la región crítica (ubicada en la cola izquierda de la distribución), por lo tanto, **no se rechaza la hipótesis nula**.
+
+### Metódo 2 - Valor_p
+
+$$
+p = 0{,}9843 > \alpha = 0{,}05
+$$
+
+El valor obtenido fue $p = 0{,}9844$, el cual es **mayor** que el nivel de significancia $\alpha = 0{,}05$, por tanto, **no se rechaza la hipótesis nula**.
+
+## Paso 6: Conclusión
+
+Tanto el método de la región crítica como el del valor p conducen a la **misma conclusión**:**no se rechaza la hipótesis nula** al nivel de significancia del 5%. El valor del estadístico $Z = 2{,}1509$ no cae en la región crítica definida por $z_\alpha = -1{,}6449$, y el valor p calculado ($p = 0{,}9844$) es mayor que $\alpha = 0{,}05$. Por lo tanto, **no se cuenta con evidencia estadísticamente significativa para afirmar que el contenido promedio de sodio en los cereales sea menor a 140 mg**. Este resultado es consistente con el valor poblacional real, ya que al tomar en cuenta toda la base de datos, se observa que la media poblacional del sodio es de $159{,}68$ mg, un valor claramente por encima del valor propuesto.  
+
+# 6.  Una investigación del mercado de cereales, indica que más de la tercera parte son manufacturados por Kelloggs. Utilizando la información de la muestra generada en el ítem 4 pruebe esta afirmación a un nivel de significacia de 0,05.
+
+Antes de realizar la prueba de hipótesis, es necesario calcular el estadístico muestral de proporción, ya que este valor será utilizado para contrastar la afirmación planteada. Dicho cálculo se realizará a partir de la muestra aleatoria simple de tamaño 50, seleccionada previamente en el ítem 4, en particular, se identificará cuántos cereales de la muestra pertenecen al fabricante Kellogg’s, y con ello se determinará la proporción muestral de dicho fabricante.
+
+```{r}
+# 1. Contar cuántos cereales de la muestra aleatoria son de Kellogg's
+kelloggs_count <- sum(muestra_aleatoria$mfr == "K")
+
+# 2. Proporción muestral
+p_gorro <- kelloggs_count / nrow(muestra_aleatoria)
+
+# 3. Impresión de resultados
+cat("Cereales de Kellogg's en la muestra:", kelloggs_count, "\n")
+cat("Proporción muestral (p̂):", round(p_gorro, 4))
+```
+## Datos 
+
+- $\hat{p} = 0{,}28$
+- $n = 50$
+- $p_0 = \dfrac{1}{3} \approx 0{,}3333$
+
+## Paso 1: Formulación de $H_0$ y $H_1$
+$$
+H_0: p \leq \dfrac{1}{3} \\
+H_1: p > \dfrac{1}{3}
+$$
+
+La formulación de las hipótesis responde al objetivo del análisis, que consiste en evaluar si **más de la tercera parte de los cereales del mercado son fabricados por Kellogg’s**. Por esta razón, la hipótesis alternativa ($H_1$) se plantea como $p > \dfrac{1}{3}$, ya que es la afirmación que se desea validar. Dado que la hipótesis alternativa define la dirección del contraste, esta situación corresponde a una prueba unilateral de cola derecha. Por otro lado, la hipótesis nula** ($H_0$) representa el **complemento lógico de $H_1$, por lo que se formula como $p \leq \dfrac{1}{3}$.
+
+## Paso 2: Definición de nivel de significancia
+$$
+\alpha = 0{,}05
+$$
+El nivel de significancia utilizado en esta prueba es $\alpha = 0{,}05$, valor que fue establecido en el enunciado del ejercicio y el cual esta asociado a la probabilidad máxima de cometer un error tipo I.
+
+## Paso 3: Cálculo de estadístico de prueba
+
+```{r}
+p0 <- 1/3
+
+# 1. Estadístico Z
+z_p <- (p_gorro - p0) / sqrt(p0 * (1 - p0) / n_1)
+
+# 2. Impresión de resultado 
+cat("Estadístico de prueba Z =", round(z_p, 4))
+```
+$$
+Z = \frac{\hat{p} - p_0}{\sqrt{\dfrac{p_0(1 - p_0)}{n}}} = 
+\frac{0{,}28 - \dfrac{1}{3}}{\sqrt{\dfrac{\dfrac{1}{3}(1 - \dfrac{1}{3})}{50}}} = -0{,}8
+$$
+El valor calculado del estadístico de prueba es $Z = -0{,}8$. Este resultado será comparado con el valor crítico correspondiente y también se utilizará para calcular el valor p, con el fin de tomar una decisión sobre la hipótesis planteada.
+
+## Paso 4: Formulación de regla de decisión
+### Metódo 1 - Región crítica
+
+Para aplicar el método de la región crítica, es necesario determinar el valor crítico correspondiente al nivel de significancia establecido. Dado que se trata de una prueba unilateral de cola derecha, el valor crítico $z_\alpha$ se obtiene a partir de la distribución normal estándar y delimita la región crítica ubicada en la cola derecha, cuya probabilidad es igual a $\alpha = 0{,}05$.  
+Cualquier valor del estadístico de prueba mayor a $z_\alpha$ se ubicará dentro de esta región, lo cual implicaría el rechazo de la hipótesis nula.
+
+```{r}
+# 1. Nivel de significancia
+alpha_2 <- 0.05
+
+# 2. Cálculo del valor crítico z para una cola izquierda
+z_critico_2 <- qnorm(1 - alpha_2)
+
+# 3. Mostrar el resultado
+cat("Valor crítico (z[0.05]) =", round(z_critico_2, 4))
+```
+```{r,echo=FALSE}
+x_vals <- seq(-4, 4, length.out = 1000)
+densidad <- dnorm(x_vals)
+df <- data.frame(x = x_vals, y = densidad)
+
+ggplot(df, aes(x, y)) +
+  geom_line(color = "black", linewidth = 1) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.8) +
+  
+  geom_area(data = subset(df, x >= z_critico_2), aes(x, y), fill = "red", alpha = 0.4) +
+  
+  geom_segment(aes(x = z_critico_2, xend = z_critico_2, y = 0, yend = dnorm(z_critico_2)),
+               color = "red", linetype = "dashed", linewidth = 1.2) +
+  geom_segment(aes(x = z_p, xend = z_p, y = 0, yend = dnorm(z_p)),
+               color = "blue", linetype = "dotted", linewidth = 1.2) +
+
+  annotate("text", x = z_critico_2 + 0.2, y = dnorm(z_critico_2) + 0.03, 
+           label = paste0("z\u03B1 = ", round(z_critico_2, 4)), color = "red", size = 4) +
+  
+  annotate("text", x = z_p - 0.2, y = dnorm(z_p) + 0.04, 
+           label = paste0("Z = ", round(z_p, 4)), color = "blue", size = 4) +
+  
+  annotate("text", x = -0.1, y = 0.1, label = "Región de\nno rechazo", color = "darkgreen", size = 5) +
+  annotate("text", x = 3, y = 0.08, label = "Región de rechazo", color = "red", size = 5) +
+
+  scale_x_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 1)) +
+  labs(
+    title = "Distribución Normal Estándar",
+    subtitle = "Región crítica (α = 0.05) y valor Z de prueba",
+    x = "Z",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
+
+### Metódo 2 - Valor_p
+
+Dado que se trata de una **prueba unilateral de cola derecha**, el valor p se calcula como la probabilidad de que una variable aleatoria normal estándar tome un valor **mayor** al estadístico de prueba obtenido:
+
+$$
+P(Z > -0{,}8)
+$$
+
+```{r}
+# 1. Cálculo del valor p (prueba unilateral derecha)
+valor_p2 <- pnorm(z_p, lower.tail = FALSE)
+
+# 2. Mostrar resultado
+cat("Valor p =", round(valor_p2, 4))
+```
+
+## Paso 5: Toma de decisión con respecto a las hipótesis 
+
+### Metódo 1 - Región crítica
+
+El valor calculado del estadístico de prueba fue $Z = -0{,}8$, el cual se encuentra a la izquierda del valor crítico $z_\alpha = 1{,}6449$, dado que se trata de una prueba unilateral de cola derecha, solo se rechaza la hipótesis nula cuando el estadístico se ubica en la región crítica, es decir, a la derecha de $z_\alpha$, en este caso, como $Z = -0{,}8$ **no cae dentro de la región crítica**, se concluye que **no se rechaza la hipótesis nula**. 
+
+### Metódo 2 - Valor_p
+
+$$
+p = 0{,}7881> \alpha = 0{,}05
+$$
+Dado que el valor p resulta ser **mayor** que el nivel de significancia establecido, no se cuenta con suficiente evidencia estadística para rechazar la hipótesis nula. 
+
+## Paso 6: Conclusión
+
+Tanto el método de la región crítica como el del valor p conducen a la misma decisión estadística: **no se rechaza la hipótesis nula** al nivel de significancia del 5%.  El valor del estadístico de prueba fue $Z = -0{,}8$, el cual no se encuentra dentro de la región crítica delimitada por $z_\alpha = 1{,}6449$.  Además, el valor p obtenido fue $p = 0{,}7881$, claramente mayor que $\alpha = 0{,}05$, lo que respalda la misma conclusión. Por tanto, **no se cuenta con evidencia estadísticamente significativa** para afirmar que **más de la tercera parte de los cereales del mercado son fabricados por Kellogg’s**. Este resultado es interesante si se considera que, al calcular la proporción poblacional a partir de toda la base de datos, Kellogg’s representa aproximadamente el $30\%$ del total de cereales producidos, una cifra cercana pero insuficiente para respaldar estadísticamente la afirmación inicial.
+
+# 7. Muestra de tamaño 40
+```{r}
+# 1. Definición de la semilla para asegurar la reproducibilidad del muestreo
+set.seed(123)
+
+# 2. Se asigna un ID único a cada cereal para facilitar su identificación posterior
+cereal1$ID_Original <- 1:nrow(cereal1)
+
+# 3. Definición del tamaño de la muestra
+n_2 <- 40  
+
+# 4. Selección de la muestra aleatoria simple SIN reemplazo
+muestreo_aleatorio2 <- sample(1:nrow(cereal1), size = n_2, replace = FALSE)
+
+# 5. Creación del subconjunto de datos con los cereales seleccionados
+muestra_aleatoria2 <- cereal1[muestreo_aleatorio2, ]
+
+# 6. Tabla que presenta los datos de la muestra seleccionada
+datatable(
+  muestra_aleatoria2[, c("ID_Original", names(cereal1)[names(cereal1) != "ID_Original"])], 
+  options = list(
+    pageLength = 10,
+    autoWidth = TRUE,
+    searching = TRUE,
+    scrollX = TRUE,
+    lengthMenu = list(c(10, 20, 50, -1), c("10", "20", "50", "Todos"))
+  ),
+  caption = "Muestra Aleatoria de Cereales",
+  rownames = FALSE
+)
+```
+# 8. Suponga que la muestra generada en el ítem 4 y en el ítem anterior son independientes. Utilizando estas dos muestras, desarrolle un prueba para determinar si las varianzas del sodio son iguales o diferentes.Utilice un nivel de significancia del 0,05. 
+
+Para determinar si las varianzas del contenido de sodio son iguales o diferentes, se utilizarán dos muestras independientes tomadas de la base de datos. Estas muestras no comparten observaciones entre sí, lo que permite aplicar una prueba F, que compara la variabilidad entre ambos grupos. Antes de realizar la prueba, se calcularán las varianzas muestrales de cada muestra:
+
+```{r}
+# 1. Cálculo de las varianzas muestrales del sodio
+varianza_1 <- var(muestra_aleatoria$sodium)
+varianza_2 <- var(muestra_aleatoria2$sodium)
+
+# 2. Imprimir resultados
+cat("Varianza muestral grupo 1:", round(varianza_1, 2), "\n")
+cat("Varianza muestral grupo 2:", round(varianza_2, 2))
+```
+## Datos 
+```{r,echo=FALSE}
+tabla_varianzas <- data.frame(
+  Grupo = c("Muestra 1", "Muestra 2"),
+  n = c(50, 40),
+  s2 = c(6907.4, 6852.82)
+)
+
+# Generar la tabla con formato HTML
+tabla_varianzas %>%
+  kable(
+    format = "html",
+    col.names = c("Grupo", "n", "s<sup>2</sup>"),
+    caption = "Tabla de Varianzas por Grupo",
+    align = "c",
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    full_width = FALSE,
+    font_size = 16,
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    position = "center"
+  ) %>%
+  row_spec(0, bold = TRUE, background = "#D9D9D9") %>%
+  column_spec(1, border_left = TRUE, border_right = TRUE) %>%
+  column_spec(2, border_left = TRUE, border_right = TRUE) %>%
+  column_spec(3, border_left = TRUE, border_right = TRUE) %>%
+  kable_classic(html_font = "Cambria")
+```
+
+## Paso 1: Formulación de $H_0$ y $H_1$
+
+$$
+H_0: \sigma_1^2 = \sigma_2^2 \\
+H_1: \sigma_1^2 \ne \sigma_2^2
+$$
+Dado que el objetivo del ejercicio es determinar si las varianzas del contenido de sodio son iguales o diferentes, se plantea una prueba bilateral para comparar las varianzas. Por esta razón, la hipótesis nula se formula como \( H_0: \sigma_1^2 = \sigma_2^2 \), lo cual supone que ambas muestras provienen de poblaciones con igual variabilidad. Por otro lado, la hipótesis alternativa \( H_1: \sigma_1^2 \ne \sigma_2^2 \) representa el caso contrario, es decir, que existe una diferencia en la dispersión del sodio entre los dos grupos.
+
+## Paso 2: Definición de nivel de significancia
+$$
+\alpha = 0{,}05
+$$
+El nivel de significancia utilizado es \( \alpha = 0{,}05 \), tal como lo indica el enunciado del ejercicio. Esto significa que se acepta hasta un 5% de probabilidad de cometer un error al rechazar la hipótesis nula si en realidad es verdadera.
+
+## Paso 3: Cálculo de estadístico de prueba
+```{r}
+# 1. Cáculo de estadístico de prueba 
+F_prueba <- varianza_1 / varianza_2
+
+gl1 <- n_1 - 1
+gl2 <- n_2 - 1
+
+# Mostrar resultado
+cat("Estadístico F =", round(F_prueba, 4), " con gl1 =", gl1, "y gl2 =", gl2)
+
+```
+$$
+F = \frac{s_1^2}{s_2^2} = \frac{6907{,}40}{6852{,}82} = 1{,}008 \quad \text{con } gl_1 = 49 \text{ y } gl_2 = 39
+$$
+
+El estadístico de prueba obtenido es \( F = 1{,}008 \), calculado con \( gl_1 = 49 \) y \( gl_2 = 39 \). Este valor representa la razón entre las varianzas muestrales, y será comparado con los valores críticos de la distribución F para determinar si existe una diferencia significativa en la variabilidad del contenido de sodio entre ambas muestras.
+
+## Paso 4: Formulación de regla de decisión
+
+### Metódo 1 - Región crítica
+
+Para aplicar el método de la región crítica, es necesario calcular los **valores críticos** de la distribución F, dado que se trata de una **prueba bilateral**, el nivel de significancia \( \alpha = 0{,}05 \) se reparte en dos colas, asignando \( \alpha/2 = 0{,}025 \) a cada extremo de la distribución, con los grados de libertad correspondientes a cada muestra (\( gl_1 = 49 \) y \( gl_2 = 39 \)), se determinarán los puntos de corte que delimitan la región de rechazo.
+
+```{r}
+# Valores críticos
+F_sup <- qf(1 - alpha/2, df1 = gl1, df2 = gl2)
+F_inf <- 1 / qf(1 - alpha/2, df1 = gl2, df2 = gl1)
+
+# Mostrar resultados
+cat("Valor crítico inferior =", round(F_inf, 4), "\n")
+cat("Valor crítico superior =", round(F_sup, 4))
+```
+
+```{r,echo=FALSE}
+x_vals <- seq(0.2, 4.5, length.out = 1000)
+densidad <- df(x_vals, df1 = gl1, df2 = gl2)
+df <- data.frame(x = x_vals, y = densidad)
+
+F_prueba <- 1.008
+
+ggplot(df, aes(x, y)) +
+  geom_line(color = "black", linewidth = 1) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.8) +
+  
+  geom_area(data = subset(df, x <= F_inf), aes(x, y), fill = "red", alpha = 0.4) +
+  geom_area(data = subset(df, x >= F_sup), aes(x, y), fill = "red", alpha = 0.4) +
+  
+  geom_segment(aes(x = F_inf, xend = F_inf, y = 0, yend = df(F_inf, gl1, gl2)), 
+               color = "red", linetype = "dashed", linewidth = 1.2) +
+  geom_segment(aes(x = F_sup, xend = F_sup, y = 0, yend = df(F_sup, gl1, gl2)), 
+               color = "red", linetype = "dashed", linewidth = 1.2) +
+  geom_segment(aes(x = F_prueba, xend = F_prueba, y = 0, yend = df(F_prueba, gl1, gl2)), 
+               color = "blue", linetype = "dotted", linewidth = 1.2) +
+  
+  annotate("text", x = F_inf - 0.1, y = df(F_inf, gl1, gl2) + 0.05,
+           label = paste0("F inf = ", round(F_inf, 3)), color = "red", size = 4) +
+  annotate("text", x = F_sup + 0.4, y = df(F_sup, gl1, gl2) + 0.08,
+           label = paste0("F sup = ", round(F_sup, 3)), color = "red", size = 4) +
+  annotate("text", 
+         x = F_prueba + 0.3, 
+         y = df(F_prueba, gl1, gl2) + 0.04,
+         label = paste0("F = ", round(F_prueba, 3)), 
+         color = "blue", size = 4) +
+  
+  annotate("text", x = 0.6, y = 0.1, label = "Región de rechazo", color = "red", size = 4) +
+  annotate("text", x = 3.3, y = 0.08, label = "Región de rechazo", color = "red", size = 4) +
+  annotate("text", x = 1, y = 0.6, label = "Región de\nno rechazo", color = "darkgreen", size = 5) +
+
+  scale_x_continuous(
+    limits = c(0.2, 4.5),
+    breaks = seq(0.5, 4.5, by = 0.5)
+  ) +
+  
+  labs(
+    title = "Distribución F",
+    subtitle = "Región crítica bilateral (α = 0.05) y valor F de prueba",
+    x = "F",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14)
+
+
+```
+
+### Metódo 2 - Valor_p
+
+Dado que se trata de una prueba bilateral, el valor p se calcula como la probabilidad de obtener un valor del estadístico F igual o más extremo que el observado, considerando tanto la cola izquierda como la cola derecha de la distribución.
+
+```{r}
+# 1. Cálculo del valor p (prueba bilateral)
+valor_p3 <- 2 * pf(F_prueba, gl1, gl2, lower.tail = FALSE)
+
+# 2. Mostrar resultado
+cat("Valor p =", round(valor_p3, 4))
+
+```
+
+## Paso 5: Toma de decisión con respecto a las hipótesis 
+
+### Metódo 1 - Región crítica
+
+El valor calculado del estadístico de prueba fue $F = 1{,}008$. Dado que se trata de una **prueba bilateral**, se deben considerar los valores críticos correspondientes al nivel de significancia $\alpha = 0{,}05$. En este caso, los valores críticos son $F_{\text{inf}} = 0{,}553$ y $F_{\text{sup}} = 1{,}8463$. Como el valor observado se encuentra entre ambos límites críticos, es decir, $0{,}553 < 1{,}008 < 1{,}8463$, se concluye que **no se rechaza la hipótesis nula**. 
+
+### Metódo 2 - Valor_p
+
+$$
+p = 0{,}9844 > \alpha = 0{,}05
+$$
+El valor calculado del valor p fue $p = 0{,}9844$, el cual es considerablemente mayor que el nivel de significancia establecido $\alpha = 0{,}05$. Dado que $p > \alpha$, se concluye que **no se rechaza la hipótesis nula**.
+
+## Paso 6: Conclusión
+
+En definitiva, los resultados obtenidos indican que **no hay suficiente evidencia estadística para afirmar que las varianzas del contenido de sodio en las dos muestras sean diferentes**. A pesar de que los valores muestrales (estadísticos) presentan cierta variabilidad, esta diferencia no es estadísticamente significativa al nivel de significancia establecido. Por tanto, se concluye que las varianzas pueden considerarse estadísticamente iguales con base en los resultados observados.
+
+
+# 9. Intervalo de confianza para la diferencia de promedios de sodio, utilizando la información de las dos muestras generadas, con un nivel de significancia del 0,05.
+
+En este caso, al continuar trabajando con dos muestras independientes, y dado que se desconocen las varianzas poblacionales, se requiere utilizar la distribución $t$ de Student para construir el intervalo de confianza. Sin embargo, en el análisis previo se concluyó que no existen diferencias significativas entre las varianzas, por lo que se asume que las varianzas poblacionales son iguales. A partir de esta suposición, se determinarán los valores relevantes y se construirá un intervalo de confianza para la diferencia de medias del contenido de sodio, utilizando el estadístico $t$ y un nivel de significancia de $\alpha = 0{,}05$, es decir, un nivel de confianza del 95%.
+
+## Datos 
+
+```{r}
+tabla_resumen <- data.frame(
+  Grupo = c("Muestra 1", "Muestra 2"),
+  `n` = c(50, 40),
+  `Media` = c(round(mean(muestra_aleatoria$sodium), 2), round(mean(muestra_aleatoria2$sodium), 2)),
+  `s²` = c(6907.4, 6852.82)
+)
+
+tabla_resumen %>%
+  kable(
+    col.names = c("Grupo", "n", "$\\bar{x}$", "s<sup>2</sup>"),
+    caption = "",
+    format = "html",
+    align = "c",
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    full_width = FALSE,
+    font_size = 16,
+    bootstrap_options = c("striped", "hover", "condensed", "bordered")
+  ) %>%
+  row_spec(0, bold = TRUE, background = "#D9D9D9") %>%
+  column_spec(1:4, border_left = TRUE, border_right = TRUE) %>%
+  kable_classic(html_font = "Cambria")
+
+```
+
+## Calcular el valor de t y los grados de libertad
+
+```{r}
+# Nivel de significancia
+alpha_3 <- 0.05
+# 1. Grados de libertad
+gl <- n_1 + n_2 - 2
+
+# 2. Valores críticos t bilateral
+t_critico_pos <- qt(1 - alpha_3/2, df = gl)
+t_critico_neg <- -t_critico_pos
+
+# 3. Imprimir resultados
+cat("Grados de libertad:", gl, "\n")
+cat("Valor crítico inferior:", round(t_critico_neg, 4), "\n")
+cat("Valor crítico superior:", round(t_critico_pos, 4), "\n")
+```
+
+## Calcular Sp 
+
+```{r}
+# 1. Cálculo de sp
+sp <- sqrt( ((n_1 - 1)*varianza_1 + (n_2 - 1)*varianza_2) / (n_1 + n_2 - 2) )
+
+# 2. Impresión de resultado
+cat("Desviación estándar combinada (s_p):", round(sp, 4), "\n")
+```
+
+## Calcular los limites del intervalo de confianza 
+```{r}
+# 1. Medias muestrales
+media1 <- mean(muestra_aleatoria$sodium)
+media2 <- mean(muestra_aleatoria2$sodium)
+
+# 2. Diferencia de medias
+diferencia_medias <- media1 - media2
+
+# 3. Error estándar
+error_estandar <- sp * sqrt(1/n_1 + 1/n_2)
+
+# Límites del intervalo
+lim_inf <- diferencia_medias - t_critico_pos * error_estandar
+lim_sup <- diferencia_medias + t_critico_pos * error_estandar
+
+# Mostrar resultados
+cat("Intervalo de confianza (95%) para la diferencia de medias:\n")
+cat("[", round(lim_inf, 2), ",", round(lim_sup, 2), "]\n")
+
+```
+Es decir:
+$$
+-32{,}98 < \mu_1 - \mu_2 < 36{,}98
+$$
+
+Como se observa, el valor $0$ se encuentra dentro del intervalo de confianza calculado. Por tanto, con un 95\% de confianza, se concluye que **no hay evidencia estadística suficiente para afirmar que exista una diferencia significativa entre las medias poblacionales del contenido de sodio en ambas muestras**.
+
+# 10. Prueba de hipótesis para verificar si los promedios de sodio son iguales o diferentes, utilizando la información de las dos muestras generadas y empleando un nivel de significancia del 0,05.
+
+Dado que se trabaja con dos muestras independientes y se desconoce la varianza poblacional, pero se asume que ambas varianzas son iguales (según la prueba previa), se empleará el estadístico t de Student para comparar los promedios poblacionales de sodio.
+
+## Datos
+```{r,echo=FALSE}
+tabla_resumen <- data.frame(
+  Grupo = c("Muestra 1", "Muestra 2"),
+  `n` = c(50, 40),
+  `Media` = c(round(mean(muestra_aleatoria$sodium), 2), round(mean(muestra_aleatoria2$sodium), 2)),
+  `s²` = c(6907.4, 6852.82)
+)
+
+tabla_resumen %>%
+  kable(
+    col.names = c("Grupo", "n", "$\\bar{x}$", "s<sup>2</sup>"),
+    caption = "",
+    format = "html",
+    align = "c",
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    full_width = FALSE,
+    font_size = 16,
+    bootstrap_options = c("striped", "hover", "condensed", "bordered")
+  ) %>%
+  row_spec(0, bold = TRUE, background = "#D9D9D9") %>%
+  column_spec(1:4, border_left = TRUE, border_right = TRUE) %>%
+  kable_classic(html_font = "Cambria")
+
+```
+
+## Paso 1: Formulación de $H_0$ y $H_1$
+
+$$
+H_0: \mu_1 = \mu_2 \\
+H_1: \mu_1 \ne \mu_2
+$$
+
+Se plantea esta formulación porque se desea evaluar si las medias poblacionales son diferentes o iguales, por tanto, la hipótesis alternativa ($H_1$) se establece como $\mu_1 \ne \mu_2$, ya que es lo que se quiere probar, y la hipótesis nula ($H_0$) como su complemento lógico: $\mu_1 = \mu_2$. Dado que la dirección de la prueba la determina $H_1$, esta corresponde a una **prueba bilateral**.
+
+## Paso 2: Definición de nivel de significancia
+$$
+\alpha = 0{,}05
+$$
+## Paso 3: Cálculo de estadístico de prueba
+
+```{r}
+# 1. Valor de la diferencia de medias bajo la hipótesis nula
+mu_diferencia <- 0
+
+# 2. Error estándar
+se_2 <- sp * sqrt(1/n_1 + 1/n_2) 
+
+# 3. Estadístico t
+t_prueba2 <- ((media1 - media2) - mu_diferencia) / se_2
+
+# 4. Mostrar resultado
+cat("Estadístico t =", round(t_prueba2, 4))
+```
+
+$$
+t = \frac{(165.5 - 163.5) - 0}{82.97 \cdot \sqrt{\frac{1}{50} + \frac{1}{40}}} = 0.1136
+$$
+
+## Paso 4: Formulación de regla de decisión
+
+### Metódo 1 - Región crítica
+
+Para aplicar el método de la región crítica, primero es necesario calcular los valores críticos de la distribución t, dado que se trata de una prueba bilateral. En este caso, el nivel de significancia \( \alpha = 0{,}05 \) se divide en dos partes, asignando \( \alpha/2 = 0{,}025 \) a cada cola, utilizando los grados de libertad correspondientes a cada muestra (\( gl_1 = 50 - 1 = 49 \) y \( gl_2 = 40 - 1 = 39 \)), se determinan los puntos críticos que definen los límites de la región de rechazo, permitiendo así la comparación con el valor del estadístico t calculado.
+
+```{r}
+# 1. Grados de libertad
+gl <- n_1 + n_2 - 2
+
+# Calcular el valor crítico t para una prueba bilateral
+t_critico_superior1 <- qt(1 - alpha_3/2, df = gl)  # Valor crítico superior
+t_critico_inferior2 <- -t_critico_superior1  # Valor crítico inferior
+
+# Mostrar los resultados
+cat("Valor crítico t inferior =", round(t_critico_inferior2, 4), "\n")
+cat("Valor crítico t superior =", round(t_critico_superior1, 4), "\n")
+```
+
+```{r,echo=FALSE}
+x_vals <- seq(-4, 4, length.out = 1000)
+densidad <- dt(x_vals, df = gl)
+df <- data.frame(x = x_vals, y = densidad)
+
+ggplot(df, aes(x, y)) +
+  geom_line(color = "black", size = 1) +
+  geom_hline(yintercept = 0, color = "black", size = 0.8) +
+  
+  geom_area(data = subset(df, x >= t_critico_superior1), aes(x, y), fill = "red", alpha = 0.4) +
+  geom_area(data = subset(df, x <= t_critico_inferior2), aes(x, y), fill = "red", alpha = 0.4) +
+  
+  geom_segment(aes(x = t_critico_inferior2, xend = t_critico_inferior2, y = 0, yend = dt(t_critico_inferior2, df = gl)),
+               color = "red", linetype = "dashed", size = 1.2) +
+  geom_segment(aes(x = t_critico_superior1, xend = t_critico_superior1, y = 0, yend = dt(t_critico_superior1, df = gl)),
+               color = "red", linetype = "dashed", size = 1.2) +
+  
+  geom_segment(aes(x = t_prueba2, xend = t_prueba2, y = 0, yend = dt(t_prueba2, df = gl)),
+               color = "blue", linetype = "dotted", size = 1.2) +
+  
+  annotate("text", x = t_critico_inferior2 - 0.2, y = dt(t_critico_inferior2, df = gl) + 0.02,
+           label = paste0("t = ", round(t_critico_inferior2, 4)), color = "red", size = 4) +
+  annotate("text", x = t_critico_superior1 + 0.2, y = dt(t_critico_superior1, df = gl) + 0.02,
+           label = paste0("t = ", round(t_critico_superior1, 4)), color = "red", size = 4) +
+  annotate("text", x = t_prueba2 + 0.2, y = dt(t_prueba2, df = gl) + 0.02,
+           label = paste0("t = ", round(t_prueba2, 4)), color = "blue", size = 4) +
+  
+  annotate("text", x = -3.5, y = 0.05, label = "Región de\nrechazo", color = "red", size = 4) +
+  annotate("text", x = 3.5, y = 0.05, label = "Región de\nrechazo", color = "red", size = 4) +
+  annotate("text", x = 0, y = 0.1, label = "Región de\nno rechazo", color = "darkgreen", size = 4) +
+  
+  scale_x_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 1)) +
+  labs(
+    title = "Distribución t",
+    subtitle = "Región crítica (α = 0.05) y valor t de prueba",
+    x = "t",
+    y = "Densidad"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
+### Metódo 2 - Valor_p
+
+Para complementar el análisis, se aplica el método del valor p, que permite contrastar la hipótesis nula evaluando la probabilidad de obtener un valor del estadístico de prueba tan extremo como el observado, bajo el supuesto de que \( H_0 \) es verdadera. Dado que se trata de una **prueba bilateral**, el valor p se calcula como la probabilidad de obtener un valor del estadístico t más extremo que el observado, considerando tanto la cola izquierda como la cola derecha de la distribución:
+
+$$
+P(t > 0.1136)
+$$
+
+En nuestro caso específico, dado que el valor calculado del estadístico t es \( t = 0.1136 \), se debe evaluar la probabilidad de que una variable aleatoria t sea más extrema que este valor, bajo el supuesto de que la hipótesis nula es verdadera.
+
+```{r}
+# 1. Cálculo del valor p (prueba bilateral con t)
+valor_p_t <- 2 * pt(abs(t_prueba2), df = gl, lower.tail = FALSE)
+
+# 2. Mostrar resultado
+cat("Valor p =", round(valor_p_t, 4))
+```
+## Paso 5: Toma de decisión con respecto a las hipótesis 
+
+### Metódo 1 - Región crítica
+
+En este caso, como se observa en la gráfica, el valor calculado del estadístico de prueba \( t = 0.1136 \) se encuentra dentro de la región de no rechazo, ya que está entre los valores críticos \( t = -1.9873 \) y \( t = 1.9873 \). Dado que el estadístico de prueba no cae dentro de la región crítica,**no se rechaza la hipótesis nula**. Esto indica que no existe evidencia suficiente para afirmar que las medias de los dos grupos son significativamente diferentes.
+
+### Metódo 2 - Valor_p
+
+$$
+p = 0{,}9098> \alpha = 0{,}05
+$$
+Como el valor p es mayor que \( \alpha \), no se rechaza la hipótesis nula \( H_0 \).
+
+## Paso 6: Conclusión
+
+En el análisis realizado para comparar los promedios de sodio de las dos muestras, se aplicaron dos métodos complementarios: el valor p y la región crítica. El valor p calculado fue mayor que el nivel de significancia \( \alpha = 0.05 \), indicando que no se rechaza la hipótesis nula. De manera similar, el estadístico de prueba \( t = 0.1136 \) se situó dentro de la región de no rechazo, entre los valores críticos \( t = -1.9873 \) y \( t = 1.9873 \), lo que también llevó a no rechazar la hipótesis nula, estos resultados sugieren que no hay evidencia estadística suficiente para concluir que las medias de sodio de las dos muestras difieren significativamente.
+
