@@ -258,8 +258,7 @@ El valor calculado del estadístico de prueba es $Z = -0{,}8$. Este resultado se
 ## Paso 4: Formulación de regla de decisión
 ### Metódo 1 - Región crítica
 
-Para aplicar el método de la región crítica, es necesario determinar el valor crítico correspondiente al nivel de significancia establecido. Dado que se trata de una prueba unilateral de cola derecha, el valor crítico $z_\alpha$ se obtiene a partir de la distribución normal estándar y delimita la región crítica ubicada en la cola derecha, cuya probabilidad es igual a $\alpha = 0{,}05$.  
-Cualquier valor del estadístico de prueba mayor a $z_\alpha$ se ubicará dentro de esta región, lo cual implicaría el rechazo de la hipótesis nula.
+Para aplicar el método de la región crítica, es necesario determinar el valor crítico correspondiente al nivel de significancia establecido, dado que se trata de una prueba unilateral de cola derecha, el valor crítico $z_\alpha$ se obtiene a partir de la distribución normal estándar y delimita la región crítica ubicada en la cola derecha, cuya probabilidad es igual a $\alpha = 0{,}05$, cualquier valor del estadístico de prueba mayor a $z_\alpha$ se ubicará dentro de esta región, lo cual implicaría el rechazo de la hipótesis nula.
 
 ```{r}
 # 1. Nivel de significancia
