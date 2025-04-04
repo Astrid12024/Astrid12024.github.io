@@ -13,8 +13,10 @@
 
 .tocify-item {
     display: block;
-    margin-left: 10px;
-    line-height: 1.5;
+    line-height: 1.8;  
+    text-align: justify;
+    margin-left: 0px;
+    padding-bottom: 5px;  
 }
 
 .tocify-item a {
@@ -39,25 +41,29 @@
     margin-top: 10px;
     font-weight: normal;
     color: #333;
+    text-align: left;
+    margin-bottom: 10px; 
 }
-
 
 .content {
-    margin-left: 370px; 
+    margin-left: 370px;
     padding: 20px;
-    max-width: calc(100% - 370px); 
+    max-width: calc(100% - 370px);
 }
-
 
 p {
     text-align: justify;
     margin-bottom: 1.5em;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 h1, h2, h3 {
-    font-size: 20px; 
+    font-size: 20px;
     font-weight: bold;
-    color: #003366; 
+    color: #003366;
+    margin-bottom: 15px;
+    text-align: left;
 }
 
 .footnotes {
@@ -87,6 +93,6 @@ body a.footnote-ref {
     content: "Bibliografía";
     display: block;
     font-weight: bold;
-    font-size: 1.5em; 
+    font-size: 1.5em;
     margin-bottom: 10px;
 }

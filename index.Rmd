@@ -105,9 +105,7 @@ datatable(tabla_variablescereal,
   ")
 ```
 
-De manera descriptiva y como se mencionó previamente, se identifican 2 variables cualitativas, correspondientes a características categóricas como el nombre del cereal **(name)** y el fabricante **(mfr)**. Ambas variables siguen una escala de medición nominal, ya que no existe un orden jerárquico entre sus categorías y su función principal es identificar o clasificar los productos.
-
-Por otro lado, se identifican 5 variables cuantitativas, que incluyen aspectos nutricionales relevantes como el contenido calórico **(calories)**, la cantidad de proteína **(protein)**, el nivel de sodio **(sodium)**, el contenido de azúcar **(sugars)** y la cantidad de potasio **(potass)**. Todas estas variables se miden en escala de razón, ya que poseen un punto cero absoluto y permiten realizar comparaciones proporcionales entre diferentes cereales. Estas mediciones son fundamentales para analizar el perfil nutricional de cada producto y establecer relaciones cuantificables entre sus componentes.
+De manera descriptiva y como se mencionó previamente, se identifican 2 variables cualitativas, correspondientes a características categóricas como el nombre del cereal **(name)** y el fabricante **(mfr)**. Ambas variables siguen una escala de medición nominal, ya que no existe un orden jerárquico entre sus categorías y su función principal es identificar o clasificar los productos. Por otro lado, se identifican 5 variables cuantitativas, que incluyen aspectos nutricionales relevantes como el contenido calórico **(calories)**, la cantidad de proteína **(protein)**, el nivel de sodio **(sodium)**, el contenido de azúcar **(sugars)** y la cantidad de potasio **(potass)**. Todas estas variables se miden en escala de razón, ya que poseen un punto cero absoluto y permiten realizar comparaciones proporcionales entre diferentes cereales. Estas mediciones son fundamentales para analizar el perfil nutricional de cada producto y establecer relaciones cuantificables entre sus componentes.
 
 # 2. Promedio de las variables cuantitativas 
 
