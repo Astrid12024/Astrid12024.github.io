@@ -66,8 +66,7 @@ datatable(
 
 # 5. Un artículo indica que el conjunto de cereales de la tabla estan dentro de los más saludables del mercado. Indica que en promedio tiene menos de 140mg de sodio. Utilizando la información de la muestra generada en el ítem 4 pruebe  esta afirmación a un nivel de significacia de 0,05. 
 
-Antes de realizar la prueba de hipótesis, es importante señalar que se cuenta con la base de datos completa, la cual representa a la población en su totalidad, lo cual permite calcular directamente parámetros poblacionales como la desviación estándar del contenido de sodio, que será utilizada para aplicar la prueba mediante una distribución normal (Z), considerando que la muestra aleatoria seleccionada tiene un tamaño de 50, lo cual se considera suficientemente grande. Este enfoque es válido, ya que no es necesario estimar la variabilidad a partir de una muestra cuando se conoce la variabilidad real de toda la población.
-Asimismo, se calculará la media muestral del sodio, ya que este valor es esencial para determinar el estadístico Z, el cual nos permitirá contrastar la hipótesis planteada.
+Antes de realizar la prueba de hipótesis, es importante destacar que se cuenta con toda la base de datos poblacional, esto permite calcular directamente parámetros como la desviación estándar del contenido de sodio, sin necesidad de estimarla a partir de una muestra. Gracias a esto, es válido aplicar la prueba utilizando la distribución normal (Z), especialmente porque el tamaño de la muestra aleatoria es de 50, lo cual se considera suficientemente grande. Además, se calculará la media muestral del contenido de sodio, ya que este valor es necesario para obtener el estadístico Z y así contrastar la hipótesis planteada.
 
 ```{r}
 # 1. Media muestral
